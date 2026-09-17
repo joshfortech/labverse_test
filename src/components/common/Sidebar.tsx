@@ -31,7 +31,7 @@ export const Sidebar: React.FC = () => {
       )}
       <aside
         className={cn(
-          'fixed top-16 left-0 z-50 h-[calc(100vh-4rem)] w-72 bg-white border-r border-slate-200 transform transition-transform duration-300 ease-in-out lg:relative lg:translate-x-0 lg:z-auto',
+          'fixed top-16 left-0 z-50 h-[calc(100vh-4rem)] w-72 bg-white border-r border-slate-200 transform transition-transform duration-300 ease-in-out lg:translate-x-0',
           sidebarOpen ? 'translate-x-0' : '-translate-x-full'
         )}
         aria-label="Subject navigation"

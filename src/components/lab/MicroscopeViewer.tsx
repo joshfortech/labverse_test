@@ -5,15 +5,9 @@ import { Button } from '../ui/button';
 import { Switch } from '../ui/switch';
 import { Label } from '../ui/label';
 import { ZoomIn, ZoomOut, Eye, RotateCcw } from 'lucide-react';
-import type { MicroscopeState, SlideType, MicroscopeLabel } from '../../types';
+import { SpecimenRenderer } from './SpecimenRenderer';
+import type { MicroscopeState, MicroscopeLabel } from '../../types';
 import { MICROSCOPE_SLIDES } from '../../types';
-
-const SLIDE_IMAGES: Record<SlideType, string> = {
-  onion_epidermis: '/assets/lab/onion_epidermis.svg',
-  leaf_stomata: '/assets/lab/leaf_stomata.svg',
-  cheek_cell: '/assets/lab/cheek_cell.svg',
-  spirogyra: '/assets/lab/spirogyra.svg',
-};
 
 interface MicroscopeViewerProps {
   state: MicroscopeState;
@@ -31,7 +25,6 @@ export const MicroscopeViewer: React.FC<MicroscopeViewerProps> = ({
   const [isDragging, setIsDragging] = useState(false);
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
   const viewerRef = useRef<HTMLDivElement>(null);
-  const imageRef = useRef<HTMLImageElement>(null);
 
   const magnifications = ['4x', '10x', '40x', '100x'] as const;
   const currentMagIndex = magnifications.indexOf(state.magnification);
@@ -45,15 +38,9 @@ export const MicroscopeViewer: React.FC<MicroscopeViewerProps> = ({
   const handleWheel = (e: React.WheelEvent) => {
     e.preventDefault();
     if (e.ctrlKey || e.metaKey) {
-      setScale((prev) => {
-        const newScale = Math.max(0.5, Math.min(5, prev - e.deltaY * 0.005));
-        return newScale;
-      });
+      setScale((prev) => Math.max(0.5, Math.min(5, prev - e.deltaY * 0.005)));
     } else {
-      setTranslate((prev) => ({
-        x: prev.x - e.deltaX,
-        y: prev.y - e.deltaY,
-      }));
+      setTranslate((prev) => ({ x: prev.x - e.deltaX, y: prev.y - e.deltaY }));
     }
   };
 
@@ -67,10 +54,7 @@ export const MicroscopeViewer: React.FC<MicroscopeViewerProps> = ({
 
   const handleMouseMove = (e: React.MouseEvent) => {
     if (isDragging) {
-      setTranslate({
-        x: e.clientX - dragStart.x,
-        y: e.clientY - dragStart.y,
-      });
+      setTranslate({ x: e.clientX - dragStart.x, y: e.clientY - dragStart.y });
     }
   };
 
@@ -79,7 +63,7 @@ export const MicroscopeViewer: React.FC<MicroscopeViewerProps> = ({
     if (viewerRef.current) viewerRef.current.style.cursor = 'grab';
   };
 
-  const handleImageClick = (e: React.MouseEvent<HTMLImageElement>) => {
+  const handleImageClick = (e: React.MouseEvent<HTMLDivElement>) => {
     const rect = e.currentTarget.getBoundingClientRect();
     const x = ((e.clientX - rect.left) / rect.width) * 100;
     const y = ((e.clientY - rect.top) / rect.height) * 100;
@@ -112,18 +96,19 @@ export const MicroscopeViewer: React.FC<MicroscopeViewerProps> = ({
             transformOrigin: 'center center',
           }}
         >
-          <img
-            ref={imageRef}
-            src={SLIDE_IMAGES[state.activeSlide]}
-            alt={`${state.activeSlide} microscope slide`}
-            className={cn('w-full h-full object-contain', !state.stained && 'grayscale')}
+          <div
+            data-tutorial="specimen-view"
+            className="w-full h-full"
             onClick={handleImageClick}
-            onLoad={() => {}}
-          />
-          
-          {state.stained && (
-            <div className="absolute inset-0 bg-amber-100/20 pointer-events-none" />
-          )}
+          >
+            <SpecimenRenderer
+              slide={state.activeSlide}
+              coarseFocus={state.coarseFocus}
+              fineFocus={state.fineFocus}
+              lightIntensity={state.lightIntensity}
+              stained={state.stained}
+            />
+          </div>
 
           {placedLabels.map((label) => (
             <div
@@ -156,6 +141,14 @@ export const MicroscopeViewer: React.FC<MicroscopeViewerProps> = ({
         <div className="absolute bottom-3 left-3 text-white/70 text-xs font-mono">
           {state.magnification} | {Math.round(scale * 100)}%
         </div>
+
+        {state.coarseFocus < 20 && (
+          <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+            <span className="text-white/40 text-sm font-medium bg-black/30 px-3 py-1 rounded-lg">
+              Adjust coarse focus to see specimen
+            </span>
+          </div>
+        )}
       </div>
 
       <div className="p-4 space-y-4 border-t border-slate-800 bg-slate-900/50">
@@ -257,7 +250,7 @@ export const LabelingPanel: React.FC<LabelingPanelProps> = ({
   return (
     <div className="bg-white rounded-xl border border-slate-200 p-4">
       <div className="flex items-center justify-between mb-4">
-        <h3 className="font-semibold text-slate-900">Identify Structures</h3>
+        <h3 className="font-semibold text-slate-900" data-tutorial="label-panel">Identify Structures</h3>
         <div className="text-sm font-mono text-slate-500">
           {placedCount}/{totalCount}
         </div>
@@ -273,18 +266,20 @@ export const LabelingPanel: React.FC<LabelingPanelProps> = ({
               label.isPlaced
                 ? 'bg-emerald-50 border-emerald-200 text-emerald-800'
                 : selectedLabel?.id === label.id
-                ? 'bg-blue-50 border-blue-200 text-blue-800'
+                ? 'bg-blue-50 border-blue-200 text-blue-800 ring-2 ring-blue-300'
                 : 'bg-slate-50 border-slate-200 text-slate-700 hover:bg-slate-100'
             )}
             disabled={label.isPlaced}
           >
             <div className="flex items-center justify-between">
               <span className="font-medium">{label.name}</span>
-              {label.isPlaced && (
+              {label.isPlaced ? (
                 <svg className="h-4 w-4 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                 </svg>
-              )}
+              ) : selectedLabel?.id === label.id ? (
+                <span className="text-xs text-blue-600 font-medium">Selected</span>
+              ) : null}
             </div>
             <p className="mt-1 text-xs opacity-70">{label.description}</p>
           </button>
@@ -292,9 +287,28 @@ export const LabelingPanel: React.FC<LabelingPanelProps> = ({
       </div>
 
       {selectedLabel && !selectedLabel.isPlaced && (
-        <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
-          <p className="text-sm text-blue-800">
-            Click on the specimen image to place <strong>{selectedLabel.name}</strong>
+        <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-lg animate-in fade-in slide-in-from-bottom-2">
+          <div className="flex items-center gap-2">
+            <div className="w-2 h-2 rounded-full bg-blue-500 animate-pulse" />
+            <p className="text-sm text-blue-800">
+              Now click on the specimen image to place <strong>{selectedLabel.name}</strong>
+            </p>
+          </div>
+        </div>
+      )}
+
+      {!selectedLabel && placedCount < totalCount && (
+        <div className="mt-4 p-3 bg-slate-50 border border-slate-200 rounded-lg">
+          <p className="text-sm text-slate-600">
+            Select a structure above, then click on the specimen to identify it.
+          </p>
+        </div>
+      )}
+
+      {placedCount === totalCount && totalCount > 0 && (
+        <div className="mt-4 p-3 bg-emerald-50 border border-emerald-200 rounded-lg">
+          <p className="text-sm text-emerald-800 font-medium">
+            All {totalCount} structures identified! You can submit your worksheet.
           </p>
         </div>
       )}

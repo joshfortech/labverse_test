@@ -68,7 +68,7 @@ const AppLayout: React.FC = () => {
     <div className="min-h-screen bg-slate-50">
       <Navbar />
       <Sidebar />
-      <main className="lg:ml-72">
+      <main className="lg:ml-72 pt-16 bg-slate-50">
         <Outlet />
       </main>
       <ToastContainer toasts={toasts} onDismiss={dismiss} />
