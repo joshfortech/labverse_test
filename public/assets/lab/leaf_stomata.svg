@@ -1,0 +1,99 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" width="800" height="600">
+  <defs>
+    <filter id="stomataShadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="1" dy="1" stdDeviation="1" flood-color="#000" flood-opacity="0.1"/>
+    </filter>
+  </defs>
+  
+  <rect width="800" height="600" fill="#0d1b1a"/>
+  
+  <g filter="url(#stomataShadow)">
+    <g id="epidermal-cells">
+      <g class="cell-row">
+        <path d="M50 100 L150 90 L160 190 L60 200 Z" fill="#1a3a2e" stroke="#3a6b4f" stroke-width="2"/>
+        <path d="M150 90 L250 80 L260 180 L160 190 Z" fill="#1a3a2e" stroke="#3a6b4f" stroke-width="2"/>
+        <path d="M250 80 L350 70 L360 170 L260 180 Z" fill="#1a3a2e" stroke="#3a6b4f" stroke-width="2"/>
+        <path d="M350 70 L450 60 L460 160 L360 170 Z" fill="#1a3a2e" stroke="#3a6b4f" stroke-width="2"/>
+        <path d="M450 60 L550 50 L560 150 L460 160 Z" fill="#1a3a2e" stroke="#3a6b4f" stroke-width="2"/>
+        <path d="M550 50 L650 40 L660 140 L560 150 Z" fill="#1a3a2e" stroke="#3a6b4f" stroke-width="2"/>
+      </g>
+      
+      <g class="cell-row">
+        <path d="M50 250 L150 240 L160 340 L60 350 Z" fill="#1a3a2e" stroke="#3a6b4f" stroke-width="2"/>
+        <path d="M150 240 L250 230 L260 330 L160 340 Z" fill="#1a3a2e" stroke="#3a6b4f" stroke-width="2"/>
+        <path d="M250 230 L350 220 L360 320 L260 330 Z" fill="#1a3a2e" stroke="#3a6b4f" stroke-width="2"/>
+        <path d="M350 220 L450 210 L460 310 L360 320 Z" fill="#1a3a2e" stroke="#3a6b4f" stroke-width="2"/>
+        <path d="M450 210 L550 200 L560 300 L460 310 Z" fill="#1a3a2e" stroke="#3a6b4f" stroke-width="2"/>
+        <path d="M550 200 L650 190 L660 290 L560 300 Z" fill="#1a3a2e" stroke="#3a6b4f" stroke-width="2"/>
+      </g>
+      
+      <g class="cell-row">
+        <path d="M50 400 L150 390 L160 490 L60 500 Z" fill="#1a3a2e" stroke="#3a6b4f" stroke-width="2"/>
+        <path d="M150 390 L250 380 L260 480 L160 490 Z" fill="#1a3a2e" stroke="#3a6b4f" stroke-width="2"/>
+        <path d="M250 380 L350 370 L360 470 L260 480 Z" fill="#1a3a2e" stroke="#3a6b4f" stroke-width="2"/>
+        <path d="M350 370 L450 360 L460 460 L360 470 Z" fill="#1a3a2e" stroke="#3a6b4f" stroke-width="2"/>
+        <path d="M450 360 L550 350 L560 450 L460 460 Z" fill="#1a3a2e" stroke="#3a6b4f" stroke-width="2"/>
+        <path d="M550 350 L650 340 L660 440 L560 450 Z" fill="#1a3a2e" stroke="#3a6b4f" stroke-width="2"/>
+      </g>
+    </g>
+    
+    <g id="stomata" opacity="0.9">
+      <g class="stoma-pair" transform="translate(280, 180)">
+        <ellipse cx="0" cy="0" rx="18" ry="8" fill="#2d5a3e" stroke="#4a8c5f" stroke-width="2"/>
+        <ellipse cx="0" cy="0" rx="10" ry="4" fill="#0d1b1a"/>
+        <ellipse cx="-25" cy="0" rx="18" ry="8" fill="#2d5a3e" stroke="#4a8c5f" stroke-width="2"/>
+        <ellipse cx="-25" cy="0" rx="10" ry="4" fill="#0d1b1a"/>
+        <circle cx="-12" cy="0" r="3" fill="#3a7b5f"/>
+      </g>
+      
+      <g class="stoma-pair" transform="translate(450, 180)">
+        <ellipse cx="0" cy="0" rx="18" ry="8" fill="#2d5a3e" stroke="#4a8c5f" stroke-width="2"/>
+        <ellipse cx="0" cy="0" rx="10" ry="4" fill="#0d1b1a"/>
+        <ellipse cx="-25" cy="0" rx="18" ry="8" fill="#2d5a3e" stroke="#4a8c5f" stroke-width="2"/>
+        <ellipse cx="-25" cy="0" rx="10" ry="4" fill="#0d1b1a"/>
+        <circle cx="-12" cy="0" r="3" fill="#3a7b5f"/>
+      </g>
+      
+      <g class="stoma-pair" transform="translate(200, 330)">
+        <ellipse cx="0" cy="0" rx="18" ry="8" fill="#2d5a3e" stroke="#4a8c5f" stroke-width="2"/>
+        <ellipse cx="0" cy="0" rx="10" ry="4" fill="#0d1b1a"/>
+        <ellipse cx="-25" cy="0" rx="18" ry="8" fill="#2d5a3e" stroke="#4a8c5f" stroke-width="2"/>
+        <ellipse cx="-25" cy="0" rx="10" ry="4" fill="#0d1b1a"/>
+        <circle cx="-12" cy="0" r="3" fill="#3a7b5f"/>
+      </g>
+      
+      <g class="stoma-pair" transform="translate(500, 330)">
+        <ellipse cx="0" cy="0" rx="18" ry="8" fill="#2d5a3e" stroke="#4a8c5f" stroke-width="2"/>
+        <ellipse cx="0" cy="0" rx="10" ry="4" fill="#0d1b1a"/>
+        <ellipse cx="-25" cy="0" rx="18" ry="8" fill="#2d5a3e" stroke="#4a8c5f" stroke-width="2"/>
+        <ellipse cx="-25" cy="0" rx="10" ry="4" fill="#0d1b1a"/>
+        <circle cx="-12" cy="0" r="3" fill="#3a7b5f"/>
+      </g>
+      
+      <g class="stoma-pair" transform="translate(350, 480)">
+        <ellipse cx="0" cy="0" rx="18" ry="8" fill="#2d5a3e" stroke="#4a8c5f" stroke-width="2"/>
+        <ellipse cx="0" cy="0" rx="10" ry="4" fill="#0d1b1a"/>
+        <ellipse cx="-25" cy="0" rx="18" ry="8" fill="#2d5a3e" stroke="#4a8c5f" stroke-width="2"/>
+        <ellipse cx="-25" cy="0" rx="10" ry="4" fill="#0d1b1a"/>
+        <circle cx="-12" cy="0" r="3" fill="#3a7b5f"/>
+      </g>
+    </g>
+    
+    <g id="chloroplasts" fill="#2d6a3e" opacity="0.7">
+      <circle cx="100" cy="130" r="4"/>
+      <circle cx="180" cy="140" r="3"/>
+      <circle cx="300" cy="120" r="4"/>
+      <circle cx="420" cy="110" r="3"/>
+      <circle cx="130" cy="280" r="4"/>
+      <circle cx="280" cy="270" r="3"/>
+      <circle cx="480" cy="250" r="4"/>
+      <circle cx="100" cy="430" r="3"/>
+      <circle cx="320" cy="420" r="4"/>
+      <circle cx="500" cy="410" r="3"/>
+    </g>
+  </g>
+  
+  <g opacity="0.2">
+    <circle cx="400" cy="300" r="250" fill="none" stroke="#3a6b4f" stroke-width="1" stroke-dasharray="5,5"/>
+  </g>
+</svg>

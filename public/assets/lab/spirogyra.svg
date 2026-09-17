@@ -1,0 +1,188 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" width="800" height="600">
+  <defs>
+    <filter id="spiroShadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="1" dy="1" stdDeviation="1" flood-color="#000" flood-opacity="0.1"/>
+    </filter>
+    <linearGradient id="chloroplastGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#2d6a3e"/>
+      <stop offset="50%" stop-color="#3a8a4f"/>
+      <stop offset="100%" stop-color="#2d6a3e"/>
+    </linearGradient>
+    <radialGradient id="pyrenoidGrad" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#1a4a2e"/>
+      <stop offset="100%" stop-color="#0d2a1e"/>
+    </radialGradient>
+  </defs>
+  
+  <rect width="800" height="600" fill="#0a1a0e"/>
+  
+  <g filter="url(#spiroShadow)">
+    <g id="filaments">
+      <g class="filament" transform="translate(100, 150)">
+        <path d="M0 0 L600 0" stroke="#3a5a3e" stroke-width="8" stroke-linecap="round"/>
+        <path d="M0 0 L600 0" stroke="#2a4a2e" stroke-width="6" stroke-linecap="round"/>
+        
+        <g class="cells">
+          <g class="cell" transform="translate(40, -3)">
+            <rect x="0" y="0" width="80" height="50" fill="#1a3a1e" stroke="#3a6a3e" stroke-width="2"/>
+            <path d="M10 5 Q40 10 70 5 Q40 40 10 45 Z" fill="url(#chloroplastGrad)" stroke="#2d6a3e" stroke-width="1.5"/>
+            <circle cx="40" cy="25" r="6" fill="url(#pyrenoidGrad)" stroke="#1a4a2e" stroke-width="1"/>
+            <circle cx="40" cy="25" r="12" fill="none" stroke="#2d6a3e" stroke-width="0.5" stroke-dasharray="2,2"/>
+            <ellipse cx="40" cy="25" rx="25" ry="20" fill="#2a3a2e" stroke="none" opacity="0.5"/>
+          </g>
+          
+          <g class="cell" transform="translate(140, -3)">
+            <rect x="0" y="0" width="80" height="50" fill="#1a3a1e" stroke="#3a6a3e" stroke-width="2"/>
+            <path d="M10 5 Q40 10 70 5 Q40 40 10 45 Z" fill="url(#chloroplastGrad)" stroke="#2d6a3e" stroke-width="1.5"/>
+            <circle cx="40" cy="25" r="6" fill="url(#pyrenoidGrad)" stroke="#1a4a2e" stroke-width="1"/>
+            <circle cx="40" cy="25" r="12" fill="none" stroke="#2d6a3e" stroke-width="0.5" stroke-dasharray="2,2"/>
+            <ellipse cx="40" cy="25" rx="25" ry="20" fill="#2a3a2e" stroke="none" opacity="0.5"/>
+          </g>
+          
+          <g class="cell" transform="translate(240, -3)">
+            <rect x="0" y="0" width="80" height="50" fill="#1a3a1e" stroke="#3a6a3e" stroke-width="2"/>
+            <path d="M10 5 Q40 10 70 5 Q40 40 10 45 Z" fill="url(#chloroplastGrad)" stroke="#2d6a3e" stroke-width="1.5"/>
+            <circle cx="40" cy="25" r="6" fill="url(#pyrenoidGrad)" stroke="#1a4a2e" stroke-width="1"/>
+            <circle cx="40" cy="25" r="12" fill="none" stroke="#2d6a3e" stroke-width="0.5" stroke-dasharray="2,2"/>
+            <ellipse cx="40" cy="25" rx="25" ry="20" fill="#2a3a2e" stroke="none" opacity="0.5"/>
+          </g>
+          
+          <g class="cell" transform="translate(340, -3)">
+            <rect x="0" y="0" width="80" height="50" fill="#1a3a1e" stroke="#3a6a3e" stroke-width="2"/>
+            <path d="M10 5 Q40 10 70 5 Q40 40 10 45 Z" fill="url(#chloroplastGrad)" stroke="#2d6a3e" stroke-width="1.5"/>
+            <circle cx="40" cy="25" r="6" fill="url(#pyrenoidGrad)" stroke="#1a4a2e" stroke-width="1"/>
+            <circle cx="40" cy="25" r="12" fill="none" stroke="#2d6a3e" stroke-width="0.5" stroke-dasharray="2,2"/>
+            <ellipse cx="40" cy="25" rx="25" ry="20" fill="#2a3a2e" stroke="none" opacity="0.5"/>
+          </g>
+          
+          <g class="cell" transform="translate(440, -3)">
+            <rect x="0" y="0" width="80" height="50" fill="#1a3a1e" stroke="#3a6a3e" stroke-width="2"/>
+            <path d="M10 5 Q40 10 70 5 Q40 40 10 45 Z" fill="url(#chloroplastGrad)" stroke="#2d6a3e" stroke-width="1.5"/>
+            <circle cx="40" cy="25" r="6" fill="url(#pyrenoidGrad)" stroke="#1a4a2e" stroke-width="1"/>
+            <circle cx="40" cy="25" r="12" fill="none" stroke="#2d6a3e" stroke-width="0.5" stroke-dasharray="2,2"/>
+            <ellipse cx="40" cy="25" rx="25" ry="20" fill="#2a3a2e" stroke="none" opacity="0.5"/>
+          </g>
+          
+          <g class="cell" transform="translate(540, -3)">
+            <rect x="0" y="0" width="60" height="50" fill="#1a3a1e" stroke="#3a6a3e" stroke-width="2"/>
+            <path d="M10 5 Q35 10 50 5 Q35 40 10 45 Z" fill="url(#chloroplastGrad)" stroke="#2d6a3e" stroke-width="1.5"/>
+            <circle cx="30" cy="25" r="5" fill="url(#pyrenoidGrad)" stroke="#1a4a2e" stroke-width="1"/>
+          </g>
+        </g>
+        
+        <g class="conjugation" transform="translate(200, 55)" opacity="0.7">
+          <path d="M40 0 Q40 30 120 30 Q200 30 200 0" stroke="#4a8a4e" stroke-width="3" fill="none" stroke-dasharray="5,3"/>
+          <circle cx="40" cy="0" r="5" fill="#4a8a4e"/>
+          <circle cx="200" cy="0" r="5" fill="#4a8a4e"/>
+        </g>
+      </g>
+      
+      <g class="filament" transform="translate(100, 350)">
+        <path d="M0 0 L600 0" stroke="#3a5a3e" stroke-width="8" stroke-linecap="round"/>
+        <path d="M0 0 L600 0" stroke="#2a4a2e" stroke-width="6" stroke-linecap="round"/>
+        
+        <g class="cells">
+          <g class="cell" transform="translate(30, -3)">
+            <rect x="0" y="0" width="75" height="48" fill="#1a3a1e" stroke="#3a6a3e" stroke-width="2"/>
+            <path d="M10 5 Q37 10 65 5 Q37 38 10 43 Z" fill="url(#chloroplastGrad)" stroke="#2d6a3e" stroke-width="1.5"/>
+            <circle cx="37" cy="24" r="5" fill="url(#pyrenoidGrad)" stroke="#1a4a2e" stroke-width="1"/>
+            <circle cx="37" cy="24" r="11" fill="none" stroke="#2d6a3e" stroke-width="0.5" stroke-dasharray="2,2"/>
+          </g>
+          
+          <g class="cell" transform="translate(125, -3)">
+            <rect x="0" y="0" width="75" height="48" fill="#1a3a1e" stroke="#3a6a3e" stroke-width="2"/>
+            <path d="M10 5 Q37 10 65 5 Q37 38 10 43 Z" fill="url(#chloroplastGrad)" stroke="#2d6a3e" stroke-width="1.5"/>
+            <circle cx="37" cy="24" r="5" fill="url(#pyrenoidGrad)" stroke="#1a4a2e" stroke-width="1"/>
+            <circle cx="37" cy="24" r="11" fill="none" stroke="#2d6a3e" stroke-width="0.5" stroke-dasharray="2,2"/>
+          </g>
+          
+          <g class="cell" transform="translate(220, -3)">
+            <rect x="0" y="0" width="75" height="48" fill="#1a3a1e" stroke="#3a6a3e" stroke-width="2"/>
+            <path d="M10 5 Q37 10 65 5 Q37 38 10 43 Z" fill="url(#chloroplastGrad)" stroke="#2d6a3e" stroke-width="1.5"/>
+            <circle cx="37" cy="24" r="5" fill="url(#pyrenoidGrad)" stroke="#1a4a2e" stroke-width="1"/>
+            <circle cx="37" cy="24" r="11" fill="none" stroke="#2d6a3e" stroke-width="0.5" stroke-dasharray="2,2"/>
+          </g>
+          
+          <g class="cell" transform="translate(315, -3)">
+            <rect x="0" y="0" width="75" height="48" fill="#1a3a1e" stroke="#3a6a3e" stroke-width="2"/>
+            <path d="M10 5 Q37 10 65 5 Q37 38 10 43 Z" fill="url(#chloroplastGrad)" stroke="#2d6a3e" stroke-width="1.5"/>
+            <circle cx="37" cy="24" r="5" fill="url(#pyrenoidGrad)" stroke="#1a4a2e" stroke-width="1"/>
+            <circle cx="37" cy="24" r="11" fill="none" stroke="#2d6a3e" stroke-width="0.5" stroke-dasharray="2,2"/>
+          </g>
+          
+          <g class="cell" transform="translate(410, -3)">
+            <rect x="0" y="0" width="75" height="48" fill="#1a3a1e" stroke="#3a6a3e" stroke-width="2"/>
+            <path d="M10 5 Q37 10 65 5 Q37 38 10 43 Z" fill="url(#chloroplastGrad)" stroke="#2d6a3e" stroke-width="1.5"/>
+            <circle cx="37" cy="24" r="5" fill="url(#pyrenoidGrad)" stroke="#1a4a2e" stroke-width="1"/>
+            <circle cx="37" cy="24" r="11" fill="none" stroke="#2d6a3e" stroke-width="0.5" stroke-dasharray="2,2"/>
+          </g>
+          
+          <g class="cell" transform="translate(505, -3)">
+            <rect x="0" y="0" width="75" height="48" fill="#1a3a1e" stroke="#3a6a3e" stroke-width="2"/>
+            <path d="M10 5 Q37 10 65 5 Q37 38 10 43 Z" fill="url(#chloroplastGrad)" stroke="#2d6a3e" stroke-width="1.5"/>
+            <circle cx="37" cy="24" r="5" fill="url(#pyrenoidGrad)" stroke="#1a4a2e" stroke-width="1"/>
+            <circle cx="37" cy="24" r="11" fill="none" stroke="#2d6a3e" stroke-width="0.5" stroke-dasharray="2,2"/>
+          </g>
+        </g>
+      </g>
+      
+      <g class="filament" transform="translate(100, 500)">
+        <path d="M0 0 L600 0" stroke="#3a5a3e" stroke-width="6" stroke-linecap="round"/>
+        <path d="M0 0 L600 0" stroke="#2a4a2e" stroke-width="4" stroke-linecap="round"/>
+        
+        <g class="cells">
+          <g class="cell" transform="translate(50, -2)">
+            <rect x="0" y="0" width="70" height="45" fill="#1a3a1e" stroke="#3a6a3e" stroke-width="1.5"/>
+            <path d="M10 4 Q35 8 60 4 Q35 36 10 41 Z" fill="url(#chloroplastGrad)" stroke="#2d6a3e" stroke-width="1"/>
+            <circle cx="35" cy="22" r="4" fill="url(#pyrenoidGrad)" stroke="#1a4a2e" stroke-width="0.5"/>
+          </g>
+          
+          <g class="cell" transform="translate(140, -2)">
+            <rect x="0" y="0" width="70" height="45" fill="#1a3a1e" stroke="#3a6a3e" stroke-width="1.5"/>
+            <path d="M10 4 Q35 8 60 4 Q35 36 10 41 Z" fill="url(#chloroplastGrad)" stroke="#2d6a3e" stroke-width="1"/>
+            <circle cx="35" cy="22" r="4" fill="url(#pyrenoidGrad)" stroke="#1a4a2e" stroke-width="0.5"/>
+          </g>
+          
+          <g class="cell" transform="translate(230, -2)">
+            <rect x="0" y="0" width="70" height="45" fill="#1a3a1e" stroke="#3a6a3e" stroke-width="1.5"/>
+            <path d="M10 4 Q35 8 60 4 Q35 36 10 41 Z" fill="url(#chloroplastGrad)" stroke="#2d6a3e" stroke-width="1"/>
+            <circle cx="35" cy="22" r="4" fill="url(#pyrenoidGrad)" stroke="#1a4a2e" stroke-width="0.5"/>
+          </g>
+          
+          <g class="cell" transform="translate(320, -2)">
+            <rect x="0" y="0" width="70" height="45" fill="#1a3a1e" stroke="#3a6a3e" stroke-width="1.5"/>
+            <path d="M10 4 Q35 8 60 4 Q35 36 10 41 Z" fill="url(#chloroplastGrad)" stroke="#2d6a3e" stroke-width="1"/>
+            <circle cx="35" cy="22" r="4" fill="url(#pyrenoidGrad)" stroke="#1a4a2e" stroke-width="0.5"/>
+          </g>
+          
+          <g class="cell" transform="translate(410, -2)">
+            <rect x="0" y="0" width="70" height="45" fill="#1a3a1e" stroke="#3a6a3e" stroke-width="1.5"/>
+            <path d="M10 4 Q35 8 60 4 Q35 36 10 41 Z" fill="url(#chloroplastGrad)" stroke="#2d6a3e" stroke-width="1"/>
+            <circle cx="35" cy="22" r="4" fill="url(#pyrenoidGrad)" stroke="#1a4a2e" stroke-width="0.5"/>
+          </g>
+          
+          <g class="cell" transform="translate(500, -2)">
+            <rect x="0" y="0" width="70" height="45" fill="#1a3a1e" stroke="#3a6a3e" stroke-width="1.5"/>
+            <path d="M10 4 Q35 8 60 4 Q35 36 10 41 Z" fill="url(#chloroplastGrad)" stroke="#2d6a3e" stroke-width="1"/>
+            <circle cx="35" cy="22" r="4" fill="url(#pyrenoidGrad)" stroke="#1a4a2e" stroke-width="0.5"/>
+          </g>
+        </g>
+      </g>
+    </g>
+    
+    <g id="debris" fill="#2a4a2e" opacity="0.3">
+      <circle cx="150" cy="100" r="3"/>
+      <circle cx="400" cy="80" r="2"/>
+      <circle cx="650" cy="120" r="3"/>
+      <circle cx="200" cy="300" r="2"/>
+      <circle cx="500" cy="280" r="3"/>
+      <circle cx="700" cy="450" r="2"/>
+      <circle cx="300" cy="550" r="2"/>
+      <circle cx="550" cy="580" r="3"/>
+    </g>
+  </g>
+  
+  <g opacity="0.1">
+    <circle cx="400" cy="300" r="300" fill="none" stroke="#2d6a3e" stroke-width="1" stroke-dasharray="5,5"/>
+  </g>
+</svg>
