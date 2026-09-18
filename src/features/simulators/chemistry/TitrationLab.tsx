@@ -8,7 +8,7 @@ import { Label } from '../../../components/ui/label';
 import { Separator } from '../../../components/ui/separator';
 import { ExperimentGuide, type GuideStep } from '../../../components/common/ExperimentGuide';
 import { TutorialOverlay } from '../../../components/lab/TutorialOverlay';
-import { useTutorialStore, type TutorialStep } from '../../../stores/useTutorialStore';
+import { useTutorialStore, type StepRequirement } from '../../../stores/useTutorialStore';
 import { useLabStore } from '../../../stores/labStore';
 import { useAuthStore } from '../../../stores/authStore';
 import { createExperimentSession } from '../../../lib/supabase';
@@ -54,68 +54,80 @@ const guideSteps: GuideStep[] = [
   },
 ];
 
-const titrationTutorialSteps: TutorialStep[] = [
+const titrationTutorialSteps: StepRequirement[] = [
   {
     id: 'add-indicator',
     targetId: 'titration-add-indicator',
-    instruction: 'Click "Add Methyl Orange Indicator" to add indicator to the conical flask containing 25.00 cm³ Na₂CO₃.',
-    hintOnTrack: 'Indicator added! Solution turned yellow — Na₂CO₃ is alkaline.',
-    validationCheck: (state) => {
+    instruction: 'Click "Add Methyl Orange Indicator" to add indicator to the Na₂CO₃ solution in the flask.',
+    correctiveHint: 'Click the "Add Methyl Orange Indicator" button. Without indicator, you cannot see the color change at the endpoint.',
+    validate: (state) => {
       const s = state as Record<string, unknown>;
       return s.indicatorAdded === true;
     },
+    waecNote: 'Methyl Orange is the standard indicator for this titration. It turns yellow in alkaline Na₂CO₃ and orange at the endpoint (pH 4.4).',
+    repeatNote: 'Each time you start a new trial, you must re-add indicator because the flask resets to plain Na₂CO₃ solution. Click "Add Methyl Orange Indicator" again.',
   },
   {
     id: 'start-trial',
     targetId: 'titration-start-trial',
     instruction: 'Click "Start Trial" to mark the initial burette reading at 0.00 cm³.',
-    hintOnTrack: 'Trial started! Begin dispensing HCl from the burette.',
-    validationCheck: (state) => {
+    correctiveHint: 'Click the "Start Trial" button. You must start a trial before dispensing any acid.',
+    validate: (state) => {
       const s = state as Record<string, unknown>;
       const ct = s.currentTrial as Record<string, unknown> | undefined;
       return ct?.initial !== undefined;
     },
+    waecNote: 'Always start from 0.00 cm³ for the initial reading. This simplifies calculation — the final reading equals the volume delivered.',
+    repeatNote: 'For each new trial, click "Start Trial" after adding indicator. The initial reading is always 0.00 cm³.',
   },
   {
     id: 'dispense-1ml',
     targetId: 'titration-dispense-1ml',
-    instruction: 'Click the 1.0 mL button to add HCl in bulk. Watch the color — yellow means you\'re still alkaline.',
-    hintOnTrack: 'HCl dispensed! Keep adding until color starts changing.',
-    validationCheck: (state) => {
+    instruction: 'Click the "1.0 mL" button to add HCl in bulk. Watch the color — yellow means still alkaline.',
+    correctiveHint: 'Click the "1.0 mL" button. The solution stays yellow until near the endpoint. Keep adding.',
+    validate: (state) => {
       const s = state as Record<string, unknown>;
       return typeof s.titrantAdded === 'number' && s.titrantAdded > 0;
     },
+    waecNote: 'Use bulk addition (1.0 mL) when far from the endpoint to save time. Switch to 0.1 mL drops when the color starts to change.',
+    repeatNote: 'In your first trial, add 1.0 mL at a time until the color starts changing. In later trials, you will know approximately when to slow down.',
   },
   {
     id: 'dispense-01ml',
     targetId: 'titration-dispense-01ml',
-    instruction: 'Switch to 0.1 mL drops for precise control near the endpoint. Add drop by drop.',
-    hintOnTrack: 'Precise dispensing! Watch for the first permanent orange color.',
-    validationCheck: (state) => {
+    instruction: 'Switch to "0.1 mL" drops for precise control. Add drop by drop until the color changes.',
+    correctiveHint: 'Click the "0.1 mL" button. Near the endpoint, add one drop at a time and watch carefully for orange.',
+    validate: (state) => {
       const s = state as Record<string, unknown>;
       return typeof s.titrantAdded === 'number' && s.titrantAdded > 0;
     },
+    waecNote: 'WAEC requires precise endpoint detection. Near the endpoint, add ONE DROP (0.1 mL) at a time and swirl. The first permanent orange is the endpoint.',
+    repeatNote: 'In later trials, you will know the approximate endpoint volume (e.g., ~21.5 mL). Add 0.1 mL drops when you are within 1 mL of that volume.',
   },
   {
     id: 'end-trial',
     targetId: 'titration-end-trial',
-    instruction: 'Once the solution turns orange (endpoint), click "End Trial" to record the final burette reading.',
-    hintOnTrack: 'Trial ended! The final reading has been recorded.',
-    validationCheck: (state) => {
+    instruction: 'The solution has turned orange (endpoint). Click "End Trial" to record the final burette reading.',
+    correctiveHint: 'Click "End Trial" to mark the final reading. This records how much HCl you delivered.',
+    validate: (state) => {
       const s = state as Record<string, unknown>;
       const ct = s.currentTrial as Record<string, unknown> | undefined;
       return ct?.initial !== undefined && ct?.final !== undefined;
     },
+    waecNote: 'Read the burette at eye level (bottom of meniscus). Record to 2 decimal places (e.g., 21.50 cm³).',
+    repeatNote: 'After clicking "End Trial", the final reading is recorded. Click "Record Trial" to save, then repeat steps 1–6 for the next trial.',
   },
   {
     id: 'record-trial',
     targetId: 'titration-record-trial',
-    instruction: 'Click "Record Trial" to save this reading. The burette refills automatically for the next trial.',
-    hintOnTrack: 'Trial recorded! Repeat to get 2 concordant titers.',
-    validationCheck: (state) => {
+    instruction: 'Click "Record Trial" to save this reading. You can then repeat the process for more trials.',
+    correctiveHint: 'Click "Record Trial" to save your titer value. The burette will refill for the next trial.',
+    validate: (state) => {
       const s = state as Record<string, unknown>;
       return Array.isArray(s.trials) && s.trials.length >= 1;
     },
+    waecNote: 'WAEC requires at least 2 concordant titers (readings within ±0.20 cm³). Concordant titers prove your technique is consistent.',
+    repeatNote: 'After recording, the apparatus resets. Repeat steps 1–6: add indicator → start trial → dispense → detect endpoint → end trial → record. Keep going until you have 2 concordant titers (within ±0.20 cm³). If you overshoot (pink), still record it and try again.',
   },
 ];
 
@@ -123,7 +135,7 @@ export const TitrationLab: React.FC = () => {
   const { titrationState, updateTitrationState, resetTitrationState, saveAllStates } = useLabStore();
   const { user } = useAuthStore();
   const { show } = useToast();
-  const { isActive: tutorialIsActive, validateAndAdvance } = useTutorialStore();
+  const { isOpen: tutorialIsOpen, validateAndAdvance } = useTutorialStore();
 
   const { buretVolume, titrantAdded, conicalVolume, indicatorAdded, flowRate, pH, color, isEndpointReached, trials, currentTrial } = titrationState;
 
@@ -131,6 +143,12 @@ export const TitrationLab: React.FC = () => {
 
   const equivalenceVolume = TITRATION_CONSTANTS.EQUIVALENCE_VOLUME;
   const endpointTolerance = TITRATION_CONSTANTS.ENDPOINT_TOLERANCE;
+
+  const tryTutorialAdvance = useCallback(() => {
+    if (!tutorialIsOpen) return;
+    const state = useLabStore.getState().titrationState;
+    validateAndAdvance(state as unknown as Record<string, unknown>);
+  }, [tutorialIsOpen, validateAndAdvance]);
 
   const calculateColor = useCallback((added: number, hasIndicator: boolean): string => {
     if (!hasIndicator) return COLOR_CLEAR;
@@ -146,12 +164,6 @@ export const TitrationLab: React.FC = () => {
     return 2.5;
   }, [equivalenceVolume, endpointTolerance]);
 
-  const tryTutorialAdvance = useCallback(() => {
-    if (!tutorialIsActive) return;
-    const state = useLabStore.getState().titrationState;
-    validateAndAdvance(state as unknown as Record<string, unknown>);
-  }, [tutorialIsActive, validateAndAdvance]);
-
   const handleAddIndicator = useCallback(() => {
     if (!indicatorAdded) {
       updateTitrationState({
@@ -166,6 +178,11 @@ export const TitrationLab: React.FC = () => {
 
   const handleDispense = useCallback((amount: number) => {
     if (buretVolume <= 0) return;
+
+    if (!indicatorAdded) {
+      show({ type: 'warning', title: 'No indicator', message: 'Add Methyl Orange indicator first!' });
+      return;
+    }
 
     setIsDispensing(true);
     const newAdded = titrantAdded + amount;
@@ -226,6 +243,8 @@ export const TitrationLab: React.FC = () => {
       updateTitrationState({ currentTrial: { initial: 0 } });
       show({ type: 'info', title: 'Trial started', message: 'Initial reading: 0.00 cm³. Start adding HCl.' });
       setTimeout(tryTutorialAdvance, 50);
+    } else if (!indicatorAdded) {
+      show({ type: 'warning', title: 'No indicator', message: 'Add Methyl Orange indicator first!' });
     }
   }, [indicatorAdded, titrantAdded, updateTitrationState, show, tryTutorialAdvance]);
 

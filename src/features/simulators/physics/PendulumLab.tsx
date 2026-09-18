@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { Play, Pause, RotateCcw, Plus, Trash2, CheckCircle, FileText, HelpCircle, Target, Timer, Ruler, Lightbulb } from 'lucide-react';
+import { Play, Pause, RotateCcw, Plus, Trash2, CheckCircle, FileText, HelpCircle, Target, Timer, Ruler, Lightbulb, LineChart } from 'lucide-react';
 import { Button } from '../../../components/ui/button';
 import { Card } from '../../../components/ui/card';
 import { Slider } from '../../../components/ui/slider';
@@ -7,12 +7,13 @@ import { Label } from '../../../components/ui/label';
 import { ProgressRing } from '../../../components/common/ProgressRing';
 import { ExperimentGuide, type GuideStep } from '../../../components/common/ExperimentGuide';
 import { TutorialOverlay } from '../../../components/lab/TutorialOverlay';
-import { useTutorialStore, type TutorialStep } from '../../../stores/useTutorialStore';
+import { useTutorialStore, type StepRequirement } from '../../../stores/useTutorialStore';
 import { useLabStore } from '../../../stores/labStore';
 import { useAuthStore } from '../../../stores/authStore';
 import { createExperimentSession } from '../../../lib/supabase';
 import { useToast } from '../../../components/common/Toast';
 import { cn, formatTime, calculatePeriod, calculateGravityFromSlope, PHYSICS_CONSTANTS } from '../../../lib/utils';
+import { WAECGraph, type GraphPoint } from '../../../components/common/WAECGraph';
 import type { PendulumDataPoint } from '../../../types';
 
 const overviewSteps: GuideStep[] = [
@@ -48,75 +49,64 @@ const overviewSteps: GuideStep[] = [
   },
 ];
 
-const tutorialSteps: TutorialStep[] = [
+const tutorialSteps: StepRequirement[] = [
   {
     id: 'set-length',
     targetId: 'pendulum-length-slider',
-    instruction: 'Drag the Length slider to set the string length. Start at 0.30 m and work up to 1.20 m.',
-    hintOnTrack: 'Length set! Keep it between 0.20 m and 1.20 m.',
-    validationCheck: (state) => {
+    instruction: 'Drag the Length slider to set the pendulum string length. Any value between 0.20 m and 1.20 m works.',
+    correctiveHint: 'Drag the Length slider to change the value. The slider is highlighted in green — just move it.',
+    validate: (state) => {
       const s = state as Record<string, unknown>;
       return typeof s.length === 'number' && s.length >= 0.2 && s.length <= 1.2;
     },
+    waecNote: 'WAEC requires plotting a T² vs L graph. You need at least 5 different lengths to draw a reliable straight line through the data points.',
+    repeatNote: 'This is trial 1 of 5. After recording, drag the Length slider to a new value (e.g., 0.50 m), then repeat steps 1–4. You need 5 different lengths: 0.30, 0.50, 0.70, 0.90, 1.10 m. Keep the angle the same for all trials.',
   },
   {
     id: 'set-angle',
     targetId: 'pendulum-angle-slider',
-    instruction: 'Set the release angle between 5° and 30°. A small angle (10-15°) ensures simple harmonic motion.',
-    hintOnTrack: 'Angle configured! Remember to keep it constant for all trials.',
-    validationCheck: (state) => {
+    instruction: 'Drag the Release Angle slider to set the angle. 10° to 15° is ideal for simple harmonic motion.',
+    correctiveHint: 'Drag the Release Angle slider. Any value between 5° and 30° is acceptable.',
+    validate: (state) => {
       const s = state as Record<string, unknown>;
       return typeof s.angle === 'number' && s.angle >= 5 && s.angle <= 30;
     },
+    waecNote: 'The angle must stay constant across all trials — only the length changes between trials. Small angles (≤15°) ensure the motion approximates simple harmonic motion.',
+    repeatNote: 'Set this once and keep it the same for all 5 lengths. Only the length changes between trials — do NOT change the angle when you repeat.',
   },
   {
     id: 'release',
     targetId: 'pendulum-start-btn',
-    instruction: 'Click "Release & Start" to begin the pendulum swing. It will time exactly 20 oscillations.',
-    hintOnTrack: 'Pendulum released! Watch the oscillation counter increase.',
-    validationCheck: (state) => {
+    instruction: 'Click "Release & Start" to begin the pendulum swing. The timer will run for exactly 20 oscillations.',
+    correctiveHint: 'Click the green "Release & Start" button to release the pendulum.',
+    validate: (state) => {
       const s = state as Record<string, unknown>;
       return s.isRunning === true;
     },
-  },
-  {
-    id: 'wait-oscillations',
-    targetId: 'pendulum-oscillation-counter',
-    instruction: 'The pendulum is swinging! Wait for it to complete 20 oscillations. The timer stops automatically.',
-    hintOnTrack: 'Oscillations progressing... keep watching the counter.',
-    validationCheck: (state) => {
-      const s = state as Record<string, unknown>;
-      return s.oscillations === 20 || (s.oscillations as number) >= 20;
-    },
+    waecNote: 'WAEC specifies timing 20 complete oscillations to reduce the effect of reaction time on the measured period. The timer stops automatically at 20.',
+    repeatNote: 'Wait for the pendulum to complete all 20 oscillations — the timer stops automatically. One oscillation = left → right → back to start.',
   },
   {
     id: 'record',
     targetId: 'pendulum-record-btn',
-    instruction: 'Click "Record Data" to save this reading. L, t₂₀, T, and T² will appear in the observation table.',
-    hintOnTrack: 'Reading recorded! You need 5 different lengths total.',
-    validationCheck: (state) => {
+    instruction: 'After the pendulum stops (20 oscillations complete), click "Record Data" to save your measurement.',
+    correctiveHint: 'Wait for the pendulum to stop swinging, then click "Record Data". The button will enable once oscillations are complete.',
+    validate: (state) => {
       const s = state as Record<string, unknown>;
       const history = s.history as PendulumDataPoint[] | undefined;
       return !!history && history.length >= 1;
     },
-  },
-  {
-    id: 'repeat',
-    targetId: 'pendulum-observation-table',
-    instruction: 'Repeat: Change length → Release → Wait 20 oscillations → Record. Do this for 5 different lengths.',
-    hintOnTrack: 'Great progress! Keep collecting data points.',
-    validationCheck: (state) => {
-      const s = state as Record<string, unknown>;
-      const history = s.history as PendulumDataPoint[] | undefined;
-      return !!history && history.length >= 5;
-    },
+    waecNote: 'Record L to 2 d.p., t₂₀ to 2 d.p., T to 3 d.p., T² to 3 d.p. These values go into your observation table.',
+    repeatNote: 'After recording, go back to step 1 and drag the Length slider to a new value. Repeat steps 1–4 until you have 5 data points in the observation table.',
   },
   {
     id: 'submit',
     targetId: 'pendulum-submit-btn',
-    instruction: 'With 5 readings recorded, click "Submit Worksheet" to calculate your experimental g.',
-    hintOnTrack: 'Worksheet submitted! Excellent work on the simple pendulum practical.',
-    validationCheck: () => true,
+    instruction: 'You have recorded data! Click "Submit Worksheet" to see your results. You can collect more readings first if you want.',
+    correctiveHint: 'Click "Submit Worksheet" to calculate your experimental g from the slope.',
+    validate: () => true,
+    waecNote: 'Plot T² (y-axis) against L (x-axis). The slope S = 4π²/g, so g = 4π²/S. Acceptable range: 9.6–10.0 m/s².',
+    repeatNote: 'To repeat the entire experiment, click "Reset" to clear all data from the observation table, then start from step 1. You can also use the digital graph below to plot your points and draw a line of best fit.',
   },
 ];
 
@@ -124,19 +114,44 @@ export const PendulumLab: React.FC = () => {
   const { pendulumState, updatePendulumState, saveAllStates } = useLabStore();
   const { user } = useAuthStore();
   const { show } = useToast();
-  const { isActive: tutorialIsActive, validateAndAdvance } = useTutorialStore();
+  const { isOpen: tutorialIsOpen, validateAndAdvance, debouncedAdvance } = useTutorialStore();
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const physicsAnimRef = useRef<number | null>(null);
   const drawAnimRef = useRef<number | null>(null);
   const lastTimeRef = useRef<number>(0);
+  const graphSectionRef = useRef<HTMLDivElement>(null);
   const [showGuide] = useState(true);
 
   const { length, angle, gravity, isRunning, oscillations, elapsedTime, history } = pendulumState;
   const currentAngleRef = useRef(pendulumState.currentAngle);
   const angularVelocityRef = useRef(pendulumState.angularVelocity);
 
+  const [graphPoints, setGraphPoints] = useState<GraphPoint[]>([]);
+
   const degreesToRadians = (deg: number) => (deg * Math.PI) / 180;
+
+  useEffect(() => {
+    if (history.length > 0 && graphPoints.length === 0) {
+      setGraphPoints(history.map((p, i) => ({
+        x: p.length,
+        y: p.periodSquared,
+        id: `auto-${i}`,
+      })));
+    }
+  }, [history]);
+
+  const tryTutorialAdvance = useCallback(() => {
+    if (!tutorialIsOpen) return;
+    const state = useLabStore.getState().pendulumState;
+    validateAndAdvance(state as unknown as Record<string, unknown>);
+  }, [tutorialIsOpen, validateAndAdvance]);
+
+  const tryTutorialDebounced = useCallback(() => {
+    if (!tutorialIsOpen) return;
+    const state = useLabStore.getState().pendulumState;
+    debouncedAdvance(state as unknown as Record<string, unknown>);
+  }, [tutorialIsOpen, debouncedAdvance]);
 
   const resetSimulation = useCallback(() => {
     const newAngle = degreesToRadians(angle);
@@ -151,12 +166,6 @@ export const PendulumLab: React.FC = () => {
       angularVelocity: 0,
     });
   }, [angle, updatePendulumState]);
-
-  const tryTutorialAdvance = useCallback(() => {
-    if (!tutorialIsActive) return;
-    const state = useLabStore.getState().pendulumState;
-    validateAndAdvance(state as unknown as Record<string, unknown>);
-  }, [tutorialIsActive, validateAndAdvance]);
 
   useEffect(() => {
     if (!isRunning) {
@@ -321,7 +330,10 @@ export const PendulumLab: React.FC = () => {
   };
 
   const handleRecord = () => {
-    if (oscillations === 0) return;
+    if (oscillations === 0) {
+      show({ type: 'warning', title: 'No data', message: 'Release the pendulum and wait for oscillations first.' });
+      return;
+    }
     const period = elapsedTime / oscillations;
     const periodSquared = Number((period * period).toFixed(3));
 
@@ -348,14 +360,14 @@ export const PendulumLab: React.FC = () => {
     if (isRunning) return;
     updatePendulumState({ length: value, amplitude: angle });
     resetSimulation();
-    setTimeout(tryTutorialAdvance, 50);
+    tryTutorialDebounced();
   };
 
   const handleAngleChange = (value: number) => {
     if (isRunning) return;
     updatePendulumState({ angle: value, amplitude: value });
     resetSimulation();
-    setTimeout(tryTutorialAdvance, 50);
+    tryTutorialDebounced();
   };
 
   const theoreticalPeriod = calculatePeriod(length, gravity);
@@ -441,6 +453,14 @@ export const PendulumLab: React.FC = () => {
                 <span className="bg-emerald-100 text-emerald-800 text-xs font-semibold px-3 py-1 rounded-full">
                   WAEC Code: PHY-PR-01
                 </span>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => graphSectionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })}
+                  className="gap-1.5 text-blue-700 border-blue-300 hover:bg-blue-50"
+                >
+                  <LineChart size={14} /> Graph
+                </Button>
                 <Button
                   variant="outline"
                   size="sm"

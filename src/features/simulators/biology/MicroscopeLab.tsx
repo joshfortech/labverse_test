@@ -10,7 +10,7 @@ import { Switch } from '../../../components/ui/switch';
 import { ProgressRing } from '../../../components/common/ProgressRing';
 import { ExperimentGuide, type GuideStep } from '../../../components/common/ExperimentGuide';
 import { TutorialOverlay } from '../../../components/lab/TutorialOverlay';
-import { useTutorialStore, type TutorialStep } from '../../../stores/useTutorialStore';
+import { useTutorialStore, type StepRequirement } from '../../../stores/useTutorialStore';
 import { useLabStore } from '../../../stores/labStore';
 import { useAuthStore } from '../../../stores/authStore';
 import { createExperimentSession } from '../../../lib/supabase';
@@ -47,71 +47,83 @@ const guideSteps: GuideStep[] = [
   {
     icon: <FileText size={20} />,
     title: 'Submit Your Worksheet',
-    description: 'Once you\'ve identified all structures, click "Submit Worksheet". Your score is based on completion rate (80%) plus stain bonus (20%). Aim for 100%!',
+    description: 'Once you have identified all structures, click "Submit Worksheet". Your score is based on completion rate (80%) plus stain bonus (20%). Aim for 100%!',
     tip: 'Check the Specimen Info tab for details about what each structure does.',
   },
 ];
 
-const microscopeTutorialSteps: TutorialStep[] = [
+const microscopeTutorialSteps: StepRequirement[] = [
   {
     id: 'select-slide',
     targetId: 'microscope-slide-select',
     instruction: 'Choose a specimen from the dropdown. Start with Onion Epidermal Cell.',
-    hintOnTrack: 'Slide selected! Now adjust the focus to see the specimen clearly.',
-    validationCheck: (state) => {
+    correctiveHint: 'Click the Slide Specimen dropdown and select a specimen to view.',
+    validate: (state) => {
       const s = state as Record<string, unknown>;
       return typeof s.activeSlide === 'string' && s.activeSlide.length > 0;
     },
+    waecNote: 'WAEC Biology practicals often require identifying cell structures on prepared slides. Onion epidermal cells are the most commonly tested.',
+    repeatNote: 'You can switch to a different specimen at any time using the dropdown. Each specimen has its own set of structures to identify — try all 4 for full practice.',
   },
   {
     id: 'coarse-focus',
     targetId: 'microscope-coarse-focus',
     instruction: 'Drag the Coarse Focus slider to get a rough image of the specimen.',
-    hintOnTrack: 'Coarse focus adjusted! Now use Fine Focus for sharp detail.',
-    validationCheck: (state) => {
+    correctiveHint: 'Move the Coarse Focus slider to bring the specimen into rough focus.',
+    validate: (state) => {
       const s = state as Record<string, unknown>;
       return typeof s.coarseFocus === 'number' && s.coarseFocus > 0;
     },
+    waecNote: 'Always start with coarse focus at low magnification (4x or 10x). This prevents damage to the slide and objective lens.',
+    repeatNote: 'Always adjust coarse focus first whenever you change magnification or switch to a new slide. Start from low and work up.',
   },
   {
     id: 'fine-focus',
     targetId: 'microscope-fine-focus',
     instruction: 'Use Fine Focus for sharp, crisp detail of the specimen.',
-    hintOnTrack: 'Focus sharp! Now identify and label a structure.',
-    validationCheck: (state) => {
+    correctiveHint: 'Move the Fine Focus slider to sharpen the image.',
+    validate: (state) => {
       const s = state as Record<string, unknown>;
       return typeof s.fineFocus === 'number' && s.fineFocus > 0;
     },
+    waecNote: 'Fine focus reveals the details you need to identify structures like nuclei, cell walls, and chloroplasts for your labeled diagram.',
+    repeatNote: 'Adjust fine focus after coarse focus. Small movements make a big difference at high magnification — move the slider slowly.',
   },
   {
     id: 'select-label',
     targetId: 'microscope-label-panel',
-    instruction: 'Click on a structure name in the panel to select it for labeling.',
-    hintOnTrack: 'Structure selected! Click on the specimen image where you see that structure.',
-    validationCheck: (state) => {
+    instruction: 'Click on a structure name in the "Identify Structures" tab to select it.',
+    correctiveHint: 'Switch to the "Identify Structures" tab and click on a structure name.',
+    validate: (state) => {
       const s = state as Record<string, unknown>;
       return Array.isArray(s.identifiedParts) && s.identifiedParts.length > 0;
     },
+    waecNote: 'WAEC requires you to draw and label what you observe. Each structure has a description telling you what to look for.',
+    repeatNote: 'Click each structure name one by one. Start with the easiest (e.g., Cell Wall) and work through all of them. The description tells you where to look on the image.',
   },
   {
     id: 'place-label',
     targetId: 'microscope-specimen-view',
-    instruction: 'With a structure selected, click on the specimen image where you see that structure.',
-    hintOnTrack: 'Structure labeled! Toggle the Iodine Stain to enhance visibility.',
-    validationCheck: (state) => {
+    instruction: 'With a structure selected, click on the specimen image where that structure is located.',
+    correctiveHint: 'Click on the specimen image at the location of the selected structure.',
+    validate: (state) => {
       const s = state as Record<string, unknown>;
       return Array.isArray(s.identifiedParts) && s.identifiedParts.length >= 1;
     },
+    waecNote: 'Read the description of each structure before labeling — it tells you what to look for and where it is typically found.',
+    repeatNote: 'After placing one label, go back to the "Identify Structures" tab and select the next structure. Repeat: select name → click on image → select next name. Aim to label all structures for full marks.',
   },
   {
     id: 'stain',
     targetId: 'microscope-stain-toggle',
     instruction: 'Toggle the Iodine Stain switch to see how staining makes structures more visible.',
-    hintOnTrack: 'Stain applied! You can now submit your worksheet or continue identifying structures.',
-    validationCheck: (state) => {
+    correctiveHint: 'Click the Iodine Stain toggle switch to apply stain.',
+    validate: (state) => {
       const s = state as Record<string, unknown>;
       return s.stained === true;
     },
+    waecNote: 'Iodine stain highlights nuclei and starch grains. WAEC awards bonus points for demonstrating stain knowledge. Plant cells use iodine; animal cells use methylene blue.',
+    repeatNote: 'Toggle the switch on/off to compare stained vs unstained views. Staining is optional but earns +20 bonus points. Plant cells (onion, leaf, spirogyra) benefit most from iodine stain.',
   },
 ];
 
@@ -119,11 +131,12 @@ export const MicroscopeLab: React.FC = () => {
   const { microscopeState, updateMicroscopeState, resetMicroscopeState, saveAllStates } = useLabStore();
   const { user } = useAuthStore();
   const { show } = useToast();
-  const { isActive: tutorialIsActive, validateAndAdvance } = useTutorialStore();
+  const { isOpen: tutorialIsOpen, validateAndAdvance, debouncedAdvance } = useTutorialStore();
 
   const { magnification, coarseFocus, fineFocus, lightIntensity, stained, activeSlide, identifiedParts, availableLabels } = microscopeState;
 
   const [selectedLabel, setSelectedLabel] = useState<MicroscopeLabel | null>(null);
+  const [activeTab, setActiveTab] = useState('identify');
 
   const slideData = MICROSCOPE_SLIDES[activeSlide];
   const labels = slideData?.labels || [];
@@ -131,10 +144,16 @@ export const MicroscopeLab: React.FC = () => {
   const totalLabels = labels.length;
 
   const tryTutorialAdvance = useCallback(() => {
-    if (!tutorialIsActive) return;
+    if (!tutorialIsOpen) return;
     const state = useLabStore.getState().microscopeState;
     validateAndAdvance(state as unknown as Record<string, unknown>);
-  }, [tutorialIsActive, validateAndAdvance]);
+  }, [tutorialIsOpen, validateAndAdvance]);
+
+  const tryTutorialDebounced = useCallback(() => {
+    if (!tutorialIsOpen) return;
+    const state = useLabStore.getState().microscopeState;
+    debouncedAdvance(state as unknown as Record<string, unknown>);
+  }, [tutorialIsOpen, debouncedAdvance]);
 
   const handleLabelPlace = useCallback((_labelId: string, x: number, y: number) => {
     if (!selectedLabel || selectedLabel.isPlaced) return;
@@ -189,6 +208,13 @@ export const MicroscopeLab: React.FC = () => {
       updateMicroscopeState({ availableLabels: labels });
     }
   }, []);
+
+  const currentStepId = useTutorialStore((s) => s.steps[s.currentStepIndex]?.id);
+  useEffect(() => {
+    if (currentStepId === 'select-label' || currentStepId === 'place-label') {
+      setActiveTab('identify');
+    }
+  }, [currentStepId]);
 
   const handleSubmitWorksheet = async () => {
     if (!user) {
@@ -337,7 +363,7 @@ export const MicroscopeLab: React.FC = () => {
           </Card>
 
           <Card>
-            <Tabs defaultValue="identify" className="w-full">
+            <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
               <TabsList className="grid w-full grid-cols-2">
                 <TabsTrigger value="identify" className="data-[state=active]:bg-lab-green data-[state=active]:text-white">
                   <Microscope className="h-4 w-4 mr-2" /> Identify Structures
@@ -406,7 +432,7 @@ export const MicroscopeLab: React.FC = () => {
                   value={[coarseFocus]}
                   onValueChange={([v]: [number]) => {
                     updateMicroscopeState({ coarseFocus: v });
-                    setTimeout(tryTutorialAdvance, 50);
+                    tryTutorialDebounced();
                   }}
                   max={100}
                   step={1}
@@ -423,7 +449,7 @@ export const MicroscopeLab: React.FC = () => {
                   value={[fineFocus]}
                   onValueChange={([v]: [number]) => {
                     updateMicroscopeState({ fineFocus: v });
-                    setTimeout(tryTutorialAdvance, 50);
+                    tryTutorialDebounced();
                   }}
                   max={100}
                   step={1}
@@ -503,7 +529,7 @@ export const MicroscopeLab: React.FC = () => {
             <div className="space-y-2 text-xs text-slate-600">
               <div className="flex justify-between">
                 <span>Total magnification:</span>
-                <span className="font-mono font-bold text-slate-900">Eyepiece × Objective</span>
+                <span className="font-mono font-bold text-slate-900">Eyepiece x Objective</span>
               </div>
               <div className="flex justify-between">
                 <span>Plant cell features:</span>

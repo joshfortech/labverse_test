@@ -97,6 +97,7 @@ export const MicroscopeViewer: React.FC<MicroscopeViewerProps> = ({
           }}
         >
           <div
+            id="microscope-specimen-view"
             data-tutorial="specimen-view"
             className="w-full h-full"
             onClick={handleImageClick}
@@ -250,7 +251,7 @@ export const LabelingPanel: React.FC<LabelingPanelProps> = ({
   return (
     <div className="bg-white rounded-xl border border-slate-200 p-4">
       <div className="flex items-center justify-between mb-4">
-        <h3 className="font-semibold text-slate-900" data-tutorial="label-panel">Identify Structures</h3>
+        <h3 className="font-semibold text-slate-900" id="microscope-label-panel" data-tutorial="label-panel">Identify Structures</h3>
         <div className="text-sm font-mono text-slate-500">
           {placedCount}/{totalCount}
         </div>
