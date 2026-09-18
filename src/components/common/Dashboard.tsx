@@ -9,10 +9,10 @@ import { cn } from '../../lib/utils';
 import { Link } from 'react-router-dom';
 
 const stats = [
-  { label: 'Practicals Completed', value: '12', icon: FlaskConical, color: 'text-blue-600 bg-blue-100' },
-  { label: 'Hours Practiced', value: '24h', icon: Clock, color: 'text-green-600 bg-green-100' },
-  { label: 'Average Score', value: '87%', icon: TrendingUp, color: 'text-orange-600 bg-orange-100' },
-  { label: 'Streak', value: '7 days', icon: Target, color: 'text-purple-600 bg-purple-100' },
+  { label: 'Practicals Completed', value: '0', icon: FlaskConical, color: 'text-blue-600 bg-blue-100' },
+  { label: 'Hours Practiced', value: '0h', icon: Clock, color: 'text-green-600 bg-green-100' },
+  { label: 'Average Score', value: '--', icon: TrendingUp, color: 'text-orange-600 bg-orange-100' },
+  { label: 'Streak', value: '0 days', icon: Target, color: 'text-purple-600 bg-purple-100' },
 ];
 
 export const Dashboard: React.FC = () => {
@@ -20,9 +20,9 @@ export const Dashboard: React.FC = () => {
   const { setActiveSubject } = useLabStore();
 
   const subjectProgress = [
-    { subject: 'physics' as const, completed: 4, total: 5 },
-    { subject: 'chemistry' as const, completed: 3, total: 5 },
-    { subject: 'biology' as const, completed: 5, total: 5 },
+    { subject: 'physics' as const, completed: 0, total: 5 },
+    { subject: 'chemistry' as const, completed: 0, total: 5 },
+    { subject: 'biology' as const, completed: 0, total: 5 },
   ];
 
   return (
@@ -76,38 +76,7 @@ export const Dashboard: React.FC = () => {
                 </div>
               </div>
               <div className="space-y-3">
-                {[
-                  { title: 'Simple Pendulum Experiment', subject: 'Physics', progress: 60, path: '/physics/pendulum' },
-                  { title: 'Acid-Base Titration', subject: 'Chemistry', progress: 45, path: '/chemistry/titration' },
-                  { title: 'Onion Epidermal Cell', subject: 'Biology', progress: 80, path: '/biology/microscope' },
-                ].map((item) => (
-                  <Link
-                    key={item.title}
-                    to={item.path}
-                    className="flex items-center justify-between p-3 rounded-xl bg-slate-50 hover:bg-slate-100 transition-colors"
-                  >
-                    <div className="flex items-center gap-3">
-                      <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-white">
-                        {item.subject === 'Physics' && <FlaskConical className="h-5 w-5 text-blue-600" />}
-                        {item.subject === 'Chemistry' && <FlaskConical className="h-5 w-5 text-orange-600" />}
-                        {item.subject === 'Biology' && <Microscope className="h-5 w-5 text-green-600" />}
-                      </div>
-                      <div>
-                        <p className="font-medium text-slate-900">{item.title}</p>
-                        <p className="text-xs text-slate-500">{item.subject}</p>
-                      </div>
-                    </div>
-                    <div className="text-right">
-                      <p className="text-sm font-semibold text-slate-900">{item.progress}%</p>
-                      <div className="w-32 h-1.5 mt-1 rounded-full bg-slate-200">
-                        <div
-                          className={cn('h-full rounded-full', item.subject === 'Physics' && 'bg-blue-600', item.subject === 'Chemistry' && 'bg-orange-600', item.subject === 'Biology' && 'bg-green-600')}
-                          style={{ width: `${item.progress}%` }}
-                        />
-                      </div>
-                    </div>
-                  </Link>
-                ))}
+                <p className="text-sm text-slate-500 text-center py-4">No experiments started yet. Pick a lab to begin!</p>
               </div>
             </div>
           </Card>

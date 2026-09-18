@@ -5,59 +5,19 @@ import { SubjectProgressCard } from '../../components/common/ProgressRing';
 import { cn } from '../../lib/utils';
 
 const overallStats = [
-  { label: 'Overall Progress', value: '73%', icon: TrendingUp, color: 'text-blue-600 bg-blue-100', trend: '+5%', trendUp: true },
-  { label: 'Practicals Done', value: '12/15', icon: Award, color: 'text-green-600 bg-green-100', trend: '+2', trendUp: true },
-  { label: 'Study Hours', value: '24h 30m', icon: Clock, color: 'text-orange-600 bg-orange-100', trend: '+3h', trendUp: true },
-  { label: 'Average Score', value: '87%', icon: Target, color: 'text-purple-600 bg-purple-100', trend: '+2%', trendUp: true },
+  { label: 'Overall Progress', value: '0%', icon: TrendingUp, color: 'text-blue-600 bg-blue-100' },
+  { label: 'Practicals Done', value: '0/15', icon: Award, color: 'text-green-600 bg-green-100' },
+  { label: 'Study Hours', value: '0h', icon: Clock, color: 'text-orange-600 bg-orange-100' },
+  { label: 'Average Score', value: '--', icon: Target, color: 'text-purple-600 bg-purple-100' },
 ];
 
-const weeklyData = [
-  { day: 'Mon', physics: 2, chemistry: 1, biology: 3 },
-  { day: 'Tue', physics: 3, chemistry: 2, biology: 1 },
-  { day: 'Wed', physics: 1, chemistry: 3, biology: 2 },
-  { day: 'Thu', physics: 2, chemistry: 1, biology: 3 },
-  { day: 'Fri', physics: 3, chemistry: 2, biology: 1 },
-  { day: 'Sat', physics: 4, chemistry: 3, biology: 4 },
-  { day: 'Sun', physics: 2, chemistry: 1, biology: 2 },
-];
+const weeklyData: { day: string; physics: number; chemistry: number; biology: number }[] = [];
 
-const scoreHistory = [
-  { date: 'Week 1', physics: 75, chemistry: 70, biology: 80 },
-  { date: 'Week 2', physics: 78, chemistry: 75, biology: 82 },
-  { date: 'Week 3', physics: 82, chemistry: 78, biology: 85 },
-  { date: 'Week 4', physics: 85, chemistry: 82, biology: 88 },
-  { date: 'Week 5', physics: 88, chemistry: 85, biology: 90 },
-  { date: 'Week 6', physics: 90, chemistry: 87, biology: 92 },
-];
+const scoreHistory: { date: string; physics: number; chemistry: number; biology: number }[] = [];
 
-const practicalDetails = [
-  { subject: 'Physics', title: 'Simple Pendulum Experiment', slug: 'pendulum', completed: true, score: 92, attempts: 3, timeSpent: '2h 15m', lastAttempt: '2 days ago' },
-  { subject: 'Physics', title: 'Refraction through Glass Block', slug: 'refraction', completed: true, score: 88, attempts: 2, timeSpent: '1h 45m', lastAttempt: '5 days ago' },
-  { subject: 'Physics', title: 'Ohm\'s Law Verification', slug: 'ohms-law', completed: true, score: 85, attempts: 1, timeSpent: '1h 30m', lastAttempt: '1 week ago' },
-  { subject: 'Physics', title: 'Focal Length of Convex Lens', slug: 'convex-lens', completed: false, score: null, attempts: 0, timeSpent: '0m', lastAttempt: 'Never' },
-  { subject: 'Physics', title: 'Speed of Sound in Air', slug: 'speed-of-sound', completed: false, score: null, attempts: 0, timeSpent: '0m', lastAttempt: 'Never' },
-  { subject: 'Chemistry', title: 'Acid-Base Titration', slug: 'titration', completed: true, score: 90, attempts: 4, timeSpent: '3h 20m', lastAttempt: '1 day ago' },
-  { subject: 'Chemistry', title: 'Qualitative Analysis - Cations', slug: 'qualitative-cations', completed: true, score: 85, attempts: 2, timeSpent: '2h 10m', lastAttempt: '1 week ago' },
-  { subject: 'Chemistry', title: 'Qualitative Analysis - Anions', slug: 'qualitative-anions', completed: false, score: null, attempts: 1, timeSpent: '45m', lastAttempt: '3 days ago' },
-  { subject: 'Chemistry', title: 'Enthalpy of Neutralization', slug: 'enthalpy-neutralization', completed: false, score: null, attempts: 0, timeSpent: '0m', lastAttempt: 'Never' },
-  { subject: 'Chemistry', title: 'Rate of Reaction', slug: 'rate-of-reaction', completed: false, score: null, attempts: 0, timeSpent: '0m', lastAttempt: 'Never' },
-  { subject: 'Biology', title: 'Onion Epidermal Cell', slug: 'onion-epidermis', completed: true, score: 95, attempts: 2, timeSpent: '1h 50m', lastAttempt: '3 days ago' },
-  { subject: 'Biology', title: 'Leaf Stomata Observation', slug: 'leaf-stomata', completed: true, score: 88, attempts: 1, timeSpent: '1h 20m', lastAttempt: '1 week ago' },
-  { subject: 'Biology', title: 'Human Cheek Cell', slug: 'cheek-cell', completed: true, score: 92, attempts: 2, timeSpent: '1h 35m', lastAttempt: '5 days ago' },
-  { subject: 'Biology', title: 'Spirogyra Filament', slug: 'spirogyra', completed: true, score: 89, attempts: 1, timeSpent: '1h 40m', lastAttempt: '1 week ago' },
-  { subject: 'Biology', title: 'Transpiration Rate', slug: 'transpiration', completed: true, score: 85, attempts: 2, timeSpent: '2h 05m', lastAttempt: '1 week ago' },
-];
+const practicalDetails: { subject: string; title: string; slug: string; completed: boolean; score: number | null; attempts: number; timeSpent: string; lastAttempt: string }[] = [];
 
-const achievements = [
-  { id: 'first_practical', name: 'First Steps', description: 'Complete your first practical', icon: Award, unlocked: true, unlockedAt: '2024-01-15' },
-  { id: 'physics_master', name: 'Physics Master', description: 'Complete all Physics practicals', icon: FlaskConical, unlocked: false, progress: 3, total: 5 },
-  { id: 'chemistry_master', name: 'Chemistry Master', description: 'Complete all Chemistry practicals', icon: FlaskConical, unlocked: false, progress: 2, total: 5 },
-  { id: 'biology_master', name: 'Biology Master', description: 'Complete all Biology practicals', icon: Microscope, unlocked: true, unlockedAt: '2024-02-10' },
-  { id: 'streak_7', name: 'Week Warrior', description: '7-day study streak', icon: Target, unlocked: true, unlockedAt: '2024-02-05' },
-  { id: 'streak_30', name: 'Monthly Dedication', description: '30-day study streak', icon: Target, unlocked: false, progress: 7, total: 30 },
-  { id: 'perfect_score', name: 'Perfectionist', description: 'Score 100% on any practical', icon: Award, unlocked: false },
-  { id: 'all_subjects', name: 'Triple Threat', description: 'Complete at least one practical in each subject', icon: BookOpen, unlocked: true, unlockedAt: '2024-01-25' },
-];
+const achievements: { id: string; name: string; description: string; icon: typeof Award; unlocked: boolean; unlockedAt?: string; progress?: number; total?: number }[] = [];
 
 export const ProgressPage: React.FC = () => {
   const [activeTab, setActiveTab] = React.useState<'overview' | 'details' | 'achievements'>('overview');
