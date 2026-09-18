@@ -109,16 +109,13 @@ const microscopeTutorialSteps: StepRequirement[] = [
     waecNote: 'Read the description of each structure before labeling — it tells you what to look for and where it is typically found.',
   },
   {
-    id: 'stain',
-    targetId: 'microscope-stain-toggle',
-    instruction: 'Toggle the Iodine Stain switch to see how staining makes structures more visible.',
-    correctiveHint: 'Click the Iodine Stain toggle switch to apply stain.',
-    validate: (state) => {
-      const s = state as Record<string, unknown>;
-      return s.stained === true;
-    },
-    waecNote: 'Iodine stain highlights nuclei and starch grains. WAEC awards bonus points for demonstrating stain knowledge. Plant cells use iodine; animal cells use methylene blue.',
-    repeatNote: 'To practice with a different specimen, click the Tutorial button again to restart this walkthrough. Try all 4 specimens (Onion, Leaf Stomata, Cheek Cell, Spirogyra) for full practice.',
+    id: 'repeat',
+    targetId: 'microscope-reset-btn',
+    instruction: 'You have identified structures on this specimen. To practice with more specimens, click "Reset Microscope" then click the Tutorial button again.',
+    correctiveHint: 'Click "Reset Microscope" to clear labels, then restart the tutorial for a different specimen.',
+    validate: () => true,
+    waecNote: 'WAEC may ask you to identify structures on different cell types. Practice with all 4 specimens for full preparation.',
+    repeatNote: 'Click "Reset Microscope" now, then click the Tutorial button in the header to walk through a different specimen. Try all 4: Onion, Leaf Stomata, Cheek Cell, and Spirogyra.',
   },
 ];
 
@@ -468,7 +465,7 @@ export const MicroscopeLab: React.FC = () => {
             </div>
 
             <div className="mt-4 pt-4 border-t border-slate-200 flex items-center justify-between">
-              <Button variant="outline" onClick={handleReset}>
+              <Button id="microscope-reset-btn" variant="outline" onClick={handleReset}>
                 <RotateCcw size={16} className="mr-2" /> Reset Microscope
               </Button>
               <Button onClick={handleSubmitWorksheet} className="bg-slate-900 hover:bg-slate-800">

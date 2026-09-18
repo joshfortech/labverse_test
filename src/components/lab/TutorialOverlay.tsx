@@ -89,57 +89,55 @@ export const TutorialOverlay: React.FC = () => {
   const progress = ((currentStepIndex + 1) / steps.length) * 100;
 
   return (
-    <div className="fixed inset-0 z-40 pointer-events-none">
-      <div className="absolute inset-0 bg-slate-900/30 pointer-events-none transition-opacity duration-300" />
-
-      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-50 pointer-events-auto bg-white/95 backdrop-blur-md p-5 rounded-2xl shadow-2xl border-2 border-emerald-500 max-w-lg w-full mx-4 transition-all duration-300">
-        <div className="flex items-center justify-between mb-2">
-          <span className="text-xs font-extrabold text-emerald-800 uppercase tracking-wider bg-emerald-100 px-3 py-1 rounded-full flex items-center gap-1.5">
-            <HelpCircle size={14} /> Step {currentStepIndex + 1} of {steps.length}
+    <div className="fixed bottom-0 left-0 right-0 z-40 pointer-events-none flex justify-center pb-4">
+      <div className="pointer-events-auto bg-white/95 backdrop-blur-md px-5 py-3 rounded-2xl shadow-2xl border-2 border-emerald-500 max-w-md w-full mx-4 transition-all duration-300">
+        <div className="flex items-center justify-between mb-1.5">
+          <span className="text-[10px] font-extrabold text-emerald-800 uppercase tracking-wider bg-emerald-100 px-2 py-0.5 rounded-full flex items-center gap-1">
+            <HelpCircle size={12} /> Step {currentStepIndex + 1} of {steps.length}
           </span>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1.5">
             <button
               onClick={() => toggleTutorial(false)}
-              className="text-xs text-slate-400 hover:text-slate-600 font-bold underline"
+              className="text-[10px] text-slate-400 hover:text-slate-600 font-bold underline"
             >
               Minimize
             </button>
             <button
               onClick={resetTutorial}
-              className="text-slate-400 hover:text-slate-600 transition-colors p-1 rounded-lg hover:bg-slate-100"
+              className="text-slate-400 hover:text-slate-600 transition-colors p-0.5 rounded-lg hover:bg-slate-100"
               aria-label="Exit tutorial"
             >
-              <X size={16} />
+              <X size={14} />
             </button>
           </div>
         </div>
 
-        <div className="h-1.5 bg-slate-100 rounded-full mb-3 overflow-hidden">
+        <div className="h-1 bg-slate-100 rounded-full mb-2 overflow-hidden">
           <div
             className="h-full bg-emerald-500 rounded-full transition-all duration-500 ease-out"
             style={{ width: `${progress}%` }}
           />
         </div>
 
-        <p className="text-sm font-semibold text-slate-800 mb-2 leading-relaxed">
+        <p className="text-sm font-semibold text-slate-800 mb-1.5 leading-snug">
           {currentStep.instruction}
         </p>
 
         {currentStep.waecNote && (
-          <p className="text-[11px] text-emerald-700 bg-emerald-50 border border-emerald-200 p-2 rounded-lg mb-2 leading-relaxed">
+          <p className="text-xs text-emerald-700 bg-emerald-50 border border-emerald-200 p-2 rounded-lg mb-1.5 leading-relaxed">
             <span className="font-bold">WAEC:</span> {currentStep.waecNote}
           </p>
         )}
 
         {currentStep.repeatNote && (
-          <p className="text-[11px] text-blue-700 bg-blue-50 border border-blue-200 p-2 rounded-lg mb-2 leading-relaxed">
-            <span className="font-bold">Repeat:</span> {currentStep.repeatNote}
+          <p className="text-sm font-semibold text-blue-700 bg-blue-50 border border-blue-200 p-2.5 rounded-lg mb-1.5 leading-relaxed">
+            <span className="font-bold">Next:</span> {currentStep.repeatNote}
           </p>
         )}
 
         {lastError && (
-          <div className="flex items-center gap-2 text-xs font-medium text-amber-800 bg-amber-50 border border-amber-200 p-2.5 rounded-xl animate-shake">
-            <AlertCircle size={16} className="text-amber-600 shrink-0" />
+          <div className="flex items-center gap-2 text-xs font-medium text-amber-800 bg-amber-50 border border-amber-200 p-2 rounded-xl animate-shake">
+            <AlertCircle size={14} className="text-amber-600 shrink-0" />
             <span>{lastError}</span>
           </div>
         )}

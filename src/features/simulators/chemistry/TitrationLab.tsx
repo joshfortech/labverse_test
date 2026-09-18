@@ -113,16 +113,13 @@ const titrationTutorialSteps: StepRequirement[] = [
     waecNote: 'Read the burette at eye level (bottom of meniscus). Record to 2 decimal places (e.g., 21.50 cm³).',
   },
   {
-    id: 'record-trial',
-    targetId: 'titration-record-trial',
-    instruction: 'Click "Record Trial" to save this reading. You can then repeat the process for more trials.',
-    correctiveHint: 'Click "Record Trial" to save your titer value. The burette will refill for the next trial.',
-    validate: (state) => {
-      const s = state as Record<string, unknown>;
-      return Array.isArray(s.trials) && s.trials.length >= 1;
-    },
-    waecNote: 'WAEC requires at least 2 concordant titers (readings within ±0.20 cm³). Concordant titers prove your technique is consistent.',
-    repeatNote: 'To collect more trials, click "Reset Apparatus", then click the Tutorial button again to restart this walkthrough. You need at least 2 concordant titers (within ±0.20 cm³). If you overshoot (pink), still record it and try again.',
+    id: 'repeat',
+    targetId: 'titration-reset',
+    instruction: 'You have recorded 1 trial. To complete the WAEC practical, you need at least 2 concordant titers. Click "Reset Apparatus" to start fresh, then click the Tutorial button again for the next trial.',
+    correctiveHint: 'Click "Reset Apparatus" to clear the data, then restart the tutorial for the next trial.',
+    validate: () => true,
+    waecNote: 'WAEC requires at least 2 concordant titers (within ±0.20 cm³). Concordant titers prove your technique is consistent.',
+    repeatNote: 'Click "Reset Apparatus" now, then click the Tutorial button in the header to walk through the next trial. Repeat until you have 2 concordant titers. If you overshoot (pink), still record it and try again.',
   },
 ];
 
@@ -433,7 +430,7 @@ export const TitrationLab: React.FC = () => {
                     <Save size={16} className="mr-1" /> Record Trial
                   </Button>
 
-                  <Button onClick={handleReset} variant="outline" className="w-full">
+                  <Button id="titration-reset" onClick={handleReset} variant="outline" className="w-full">
                     <RefreshCw size={16} className="mr-1" /> Reset Apparatus
                   </Button>
                 </div>

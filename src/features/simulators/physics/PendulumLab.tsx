@@ -96,13 +96,13 @@ const tutorialSteps: StepRequirement[] = [
     waecNote: 'Record L to 2 d.p., t₂₀ to 2 d.p., T to 3 d.p., T² to 3 d.p. These values go into your observation table.',
   },
   {
-    id: 'submit',
-    targetId: 'pendulum-submit-btn',
-    instruction: 'You have recorded data! Click "Submit Worksheet" to see your results. You can collect more readings first if you want.',
-    correctiveHint: 'Click "Submit Worksheet" to calculate your experimental g from the slope.',
+    id: 'repeat',
+    targetId: 'pendulum-reset-btn',
+    instruction: 'You have recorded 1 data point. To complete the WAEC practical, you need 5 different lengths. Click "Reset" to clear the data, then click the Tutorial button again to walk through the next trial.',
+    correctiveHint: 'Click the "Reset" button to clear your data, then restart the tutorial for the next length.',
     validate: () => true,
-    waecNote: 'Plot T² (y-axis) against L (x-axis). The slope S = 4π²/g, so g = 4π²/S. Acceptable range: 9.6–10.0 m/s².',
-    repeatNote: 'To collect more data points, click "Reset", then click the Tutorial button again to restart this walkthrough. You need 5 different lengths for a complete WAEC practical. Use the digital graph below the observation table to plot your T² vs L points and draw a line of best fit.',
+    waecNote: 'WAEC requires 5 different lengths (e.g., 0.30, 0.50, 0.70, 0.90, 1.10 m) with the same angle. Plot T² vs L and draw a line of best fit to calculate g = 4π²/S.',
+    repeatNote: 'Click "Reset" now, then click the Tutorial button in the header to walk through the next trial. After 5 trials, use the digital graph at the bottom of the page to plot your points and draw a line of best fit.',
   },
 ];
 
@@ -321,7 +321,9 @@ export const PendulumLab: React.FC = () => {
     if (oscillations >= 20 && isRunning) return;
     if (!isRunning) {
       lastTimeRef.current = 0;
-      pendulumSectionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      setTimeout(() => {
+        pendulumSectionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 100);
     }
     updatePendulumState({ isRunning: !isRunning });
     setTimeout(tryTutorialAdvance, 50);
@@ -558,7 +560,7 @@ export const PendulumLab: React.FC = () => {
                   {isRunning ? <Pause size={18} /> : <Play size={18} />}
                   {isRunning ? 'Pause' : oscillations >= 20 ? 'Complete' : 'Release & Start'}
                 </Button>
-                <Button onClick={handleReset} variant="outline" className="px-4 py-3">
+                <Button id="pendulum-reset-btn" onClick={handleReset} variant="outline" className="px-4 py-3">
                   <RotateCcw size={16} className="mr-1" /> Reset
                 </Button>
                 <Button
