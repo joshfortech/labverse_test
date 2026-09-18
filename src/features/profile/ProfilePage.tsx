@@ -48,25 +48,19 @@ export const ProfilePage: React.FC = () => {
   };
 
   const stats = [
-    { label: 'Practicals Completed', value: '12', icon: Award, color: 'text-blue-600 bg-blue-100' },
-    { label: 'Hours Practiced', value: '24h', icon: TrendingUp, color: 'text-green-600 bg-green-100' },
-    { label: 'Average Score', value: '87%', icon: Target, color: 'text-orange-600 bg-orange-100' },
-    { label: 'Current Streak', value: '7 days', icon: Target, color: 'text-purple-600 bg-purple-100' },
+    { label: 'Practicals Completed', value: '0', icon: Award, color: 'text-blue-600 bg-blue-100' },
+    { label: 'Hours Practiced', value: '0h', icon: TrendingUp, color: 'text-green-600 bg-green-100' },
+    { label: 'Average Score', value: '--', icon: Target, color: 'text-orange-600 bg-orange-100' },
+    { label: 'Current Streak', value: '0 days', icon: Target, color: 'text-purple-600 bg-purple-100' },
   ];
 
   const subjectProgress = [
-    { subject: 'Physics', completed: 4, total: 5, color: 'blue', icon: <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg> },
-    { subject: 'Chemistry', completed: 3, total: 5, color: 'orange', icon: <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 14.042v.821m-5.071-5.071l1.414 1.414M15 10h2.5M15 14h2.5M5.636 5.636l1.414 1.414M21 12a9 9 0 11-18 0 9 9 0 0118 0zM9.5 9.5l4.5 4.5" /></svg> },
-    { subject: 'Biology', completed: 5, total: 5, color: 'green', icon: <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg> },
+    { subject: 'Physics', completed: 0, total: 5, color: 'blue', icon: <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg> },
+    { subject: 'Chemistry', completed: 0, total: 5, color: 'orange', icon: <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 14.042v.821m-5.071-5.071l1.414 1.414M15 10h2.5M15 14h2.5M5.636 5.636l1.414 1.414M21 12a9 9 0 11-18 0 9 9 0 0118 0zM9.5 9.5l4.5 4.5" /></svg> },
+    { subject: 'Biology', completed: 0, total: 5, color: 'green', icon: <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg> },
   ];
 
-  const recentActivity = [
-    { action: 'Completed Simple Pendulum Experiment', subject: 'Physics', score: 92, time: '2 hours ago' },
-    { action: 'Recorded 5th titration trial', subject: 'Chemistry', score: 88, time: '1 day ago' },
-    { action: 'Identified all onion cell structures', subject: 'Biology', score: 95, time: '3 days ago' },
-    { action: 'Submitted Ohm\'s Law worksheet', subject: 'Physics', score: 90, time: '5 days ago' },
-    { action: 'Completed leaf stomata observation', subject: 'Biology', score: 85, time: '1 week ago' },
-  ];
+  const recentActivity: { action: string; subject: string; score: number; time: string }[] = [];
 
   return (
     <div className="pt-16 min-h-screen bg-slate-50">
@@ -229,7 +223,9 @@ export const ProfilePage: React.FC = () => {
             <Card className="p-6">
               <h2 className="text-xl font-bold text-slate-900 mb-6">Recent Activity</h2>
               <div className="space-y-4">
-                {recentActivity.map((activity, idx) => (
+                {recentActivity.length === 0 ? (
+                  <p className="text-sm text-slate-400 text-center py-4">No activity yet. Start a practical to see your history here.</p>
+                ) : recentActivity.map((activity, idx) => (
                   <div key={idx} className="flex items-center justify-between p-4 bg-slate-50 rounded-xl hover:bg-slate-100 transition-colors">
                     <div className="flex items-center gap-4">
                       <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-white">

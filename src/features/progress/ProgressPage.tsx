@@ -1,5 +1,5 @@
 import React from 'react';
-import { TrendingUp, Target, Award, Clock, BookOpen, FlaskConical, Microscope, ArrowUpRight, ArrowDownRight } from 'lucide-react';
+import { TrendingUp, Target, Award, Clock } from 'lucide-react';
 import { Card } from '../../components/ui/card';
 import { SubjectProgressCard } from '../../components/common/ProgressRing';
 import { cn } from '../../lib/utils';
@@ -63,21 +63,15 @@ export const ProgressPage: React.FC = () => {
                       <stat.icon className="h-7 w-7 text-white" />
                     </div>
                   </div>
-                  <div className="mt-4 flex items-center justify-between">
-                    <span className={cn('text-sm font-medium', stat.trendUp ? 'text-emerald-600' : 'text-red-600')}>
-                      {stat.trendUp ? <ArrowUpRight className="h-3.5 w-3.5 inline mr-1" /> : <ArrowDownRight className="h-3.5 w-3.5 inline mr-1" />}
-                      {stat.trend} vs last week
-                    </span>
-                  </div>
                 </Card>
               ))}
             </div>
 
             <div className="grid gap-6 lg:grid-cols-3">
               {[
-                { subject: 'physics', completed: 3, total: 5 },
-                { subject: 'chemistry', completed: 2, total: 5 },
-                { subject: 'biology', completed: 5, total: 5 },
+                { subject: 'physics', completed: 0, total: 5 },
+                { subject: 'chemistry', completed: 0, total: 5 },
+                { subject: 'biology', completed: 0, total: 5 },
               ].map((sp) => (
                 <SubjectProgressCard
                   key={sp.subject}
@@ -92,8 +86,14 @@ export const ProgressPage: React.FC = () => {
               <Card>
                 <div className="p-6">
                   <h3 className="font-bold text-slate-900 mb-6">Weekly Study Hours</h3>
-                  <div className="h-64 flex items-end justify-around">
-                    {weeklyData.map((day) => (
+                  {weeklyData.length === 0 ? (
+                    <div className="h-64 flex items-center justify-center text-sm text-slate-400">
+                      No study data yet. Start a practical to track your hours.
+                    </div>
+                  ) : (
+                    <>
+                    <div className="h-64 flex items-end justify-around">
+                      {weeklyData.map((day) => (
                       <div key={day.day} className="flex flex-col items-center gap-2 w-full">
                         <div className="flex gap-1 w-full h-full items-end">
                           {[
@@ -112,18 +112,25 @@ export const ProgressPage: React.FC = () => {
                         <span className="text-xs text-slate-500">{day.day}</span>
                       </div>
                     ))}
-                  </div>
-                  <div className="mt-4 flex items-center justify-center gap-4 text-xs">
-                    <span className="flex items-center gap-1"><span className="w-3 h-3 rounded bg-blue-500" /> Physics</span>
-                    <span className="flex items-center gap-1"><span className="w-3 h-3 rounded bg-orange-500" /> Chemistry</span>
-                    <span className="flex items-center gap-1"><span className="w-3 h-3 rounded bg-green-500" /> Biology</span>
-                  </div>
+                    </div>
+                    <div className="mt-4 flex items-center justify-center gap-4 text-xs">
+                      <span className="flex items-center gap-1"><span className="w-3 h-3 rounded bg-blue-500" /> Physics</span>
+                      <span className="flex items-center gap-1"><span className="w-3 h-3 rounded bg-orange-500" /> Chemistry</span>
+                      <span className="flex items-center gap-1"><span className="w-3 h-3 rounded bg-green-500" /> Biology</span>
+                    </div>
+                    </>
+                  )}
                 </div>
               </Card>
 
               <Card>
                 <div className="p-6">
                   <h3 className="font-bold text-slate-900 mb-6">Score Trend (Last 6 Weeks)</h3>
+                  {scoreHistory.length === 0 ? (
+                    <div className="h-64 flex items-center justify-center text-sm text-slate-400">
+                      No scores recorded yet. Complete a practical to see your trend.
+                    </div>
+                  ) : (
                   <div className="h-64 relative">
                     <svg viewBox="0 0 600 200" className="w-full h-full" preserveAspectRatio="none">
                       <defs>
@@ -183,6 +190,7 @@ export const ProgressPage: React.FC = () => {
                       <span className="flex items-center gap-1"><span className="w-3 h-3 rounded bg-green-500" /> Biology</span>
                     </div>
                   </div>
+                  )}
                 </div>
               </Card>
             </div>
@@ -215,6 +223,11 @@ export const ProgressPage: React.FC = () => {
             </div>
 
             <div className="overflow-x-auto">
+              {practicalDetails.length === 0 ? (
+                <div className="text-center py-12 text-sm text-slate-400">
+                  No practicals attempted yet. Start a lab to see your results here.
+                </div>
+              ) : (
               <table className="w-full text-left">
                 <thead className="bg-slate-50 text-slate-700 uppercase text-xs">
                   <tr>
@@ -261,12 +274,18 @@ export const ProgressPage: React.FC = () => {
                   ))}
                 </tbody>
               </table>
+              )}
             </div>
           </div>
         )}
 
         {activeTab === 'achievements' && (
           <div className="space-y-6">
+            {achievements.length === 0 ? (
+              <div className="text-center py-12 text-sm text-slate-400">
+                No achievements unlocked yet. Complete practicals to earn badges!
+              </div>
+            ) : (
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
               {achievements.map((achievement) => (
                 <Card key={achievement.id} className={cn('p-6 relative overflow-hidden', achievement.unlocked ? '' : 'opacity-60 grayscale')}>
@@ -296,7 +315,7 @@ export const ProgressPage: React.FC = () => {
                       <div className="h-2 w-full overflow-hidden rounded-full bg-slate-200">
                         <div className="h-full bg-lab-green transition-all" style={{ width: `${(achievement.progress / achievement.total) * 100}%` }} />
                       </div>
-                      <p className="text-xs text-slate-500">{achievement.progress} of {achievement.total} completed</p>
+                      <p className="text-xs text-slate-500">{achievement.progress} of {achievement.total ?? 0} completed</p>
                     </div>
                   ) : (
                     <p className="text-xs text-slate-500">Locked</p>
@@ -304,6 +323,7 @@ export const ProgressPage: React.FC = () => {
                 </Card>
               ))}
             </div>
+            )}
           </div>
         )}
       </div>

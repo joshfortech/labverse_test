@@ -13,12 +13,12 @@ const achievementCategories = [
     icon: CheckCircle,
     color: 'emerald',
     achievements: [
-      { id: 'first_practical', name: 'First Steps', description: 'Complete your first practical simulation', icon: Award, requirement: 1, current: 3, unlocked: true, unlockedAt: '2024-01-15', rarity: 'common' },
-      { id: 'physics_complete', name: 'Physics Prodigy', description: 'Complete all 5 Physics practicals', icon: Award, requirement: 5, current: 3, unlocked: false, progress: 3, total: 5, rarity: 'rare' },
-      { id: 'chemistry_complete', name: 'Chemistry Champion', description: 'Complete all 5 Chemistry practicals', icon: Award, requirement: 5, current: 2, unlocked: false, progress: 2, total: 5, rarity: 'rare' },
-      { id: 'biology_complete', name: 'Biology Buff', description: 'Complete all 5 Biology practicals', icon: Award, requirement: 5, current: 5, unlocked: true, unlockedAt: '2024-02-10', rarity: 'rare' },
-      { id: 'all_complete', name: 'Triple Threat', description: 'Complete at least one practical in each subject', icon: Trophy, requirement: 3, current: 3, unlocked: true, unlockedAt: '2024-01-25', rarity: 'epic' },
-      { id: 'master_all', name: 'Labverse Master', description: 'Complete all 15 practicals across all subjects', icon: Trophy, requirement: 15, current: 10, unlocked: false, progress: 10, total: 15, rarity: 'legendary' },
+      { id: 'first_practical', name: 'First Steps', description: 'Complete your first practical simulation', icon: Award, requirement: 1, current: 0, unlocked: false, unlockedAt: undefined, rarity: 'common' },
+      { id: 'physics_complete', name: 'Physics Prodigy', description: 'Complete all 5 Physics practicals', icon: Award, requirement: 5, current: 0, unlocked: false, progress: 0, total: 5, unlockedAt: undefined, rarity: 'rare' },
+      { id: 'chemistry_complete', name: 'Chemistry Champion', description: 'Complete all 5 Chemistry practicals', icon: Award, requirement: 5, current: 0, unlocked: false, progress: 0, total: 5, unlockedAt: undefined, rarity: 'rare' },
+      { id: 'biology_complete', name: 'Biology Buff', description: 'Complete all 5 Biology practicals', icon: Award, requirement: 5, current: 0, unlocked: false, progress: 0, total: 5, unlockedAt: undefined, rarity: 'rare' },
+      { id: 'all_complete', name: 'Triple Threat', description: 'Complete at least one practical in each subject', icon: Trophy, requirement: 3, current: 0, unlocked: false, progress: 0, total: 3, unlockedAt: undefined, rarity: 'epic' },
+      { id: 'master_all', name: 'Labverse Master', description: 'Complete all 15 practicals across all subjects', icon: Trophy, requirement: 15, current: 0, unlocked: false, progress: 0, total: 15, unlockedAt: undefined, rarity: 'legendary' },
     ],
   },
   {
@@ -27,11 +27,11 @@ const achievementCategories = [
     icon: Star,
     color: 'amber',
     achievements: [
-      { id: 'perfect_score', name: 'Perfectionist', description: 'Score 100% on any practical', icon: Star, requirement: 100, current: 95, unlocked: false, rarity: 'epic' },
-      { id: 'high_scorer', name: 'High Achiever', description: 'Maintain an average score of 90%+', icon: Star, requirement: 90, current: 87, unlocked: false, rarity: 'rare' },
-      { id: 'consistent_90', name: 'Consistency King', description: 'Score 90%+ on 5 consecutive practicals', icon: Star, requirement: 5, current: 2, unlocked: false, progress: 2, total: 5, rarity: 'epic' },
-      { id: 'no_mistakes', name: 'Flawless Execution', description: 'Complete a practical with zero errors', icon: Sparkles, requirement: 1, current: 0, unlocked: false, rarity: 'legendary' },
-      { id: 'speed_demon', name: 'Speed Demon', description: 'Complete a practical in under 50% of allocated time', icon: Zap, requirement: 1, current: 0, unlocked: false, rarity: 'rare' },
+      { id: 'perfect_score', name: 'Perfectionist', description: 'Score 100% on any practical', icon: Star, requirement: 100, current: 0, unlocked: false, unlockedAt: undefined, rarity: 'epic' },
+      { id: 'high_scorer', name: 'High Achiever', description: 'Maintain an average score of 90%+', icon: Star, requirement: 90, current: 0, unlocked: false, unlockedAt: undefined, rarity: 'rare' },
+      { id: 'consistent_90', name: 'Consistency King', description: 'Score 90%+ on 5 consecutive practicals', icon: Star, requirement: 5, current: 0, unlocked: false, progress: 0, total: 5, unlockedAt: undefined, rarity: 'epic' },
+      { id: 'no_mistakes', name: 'Flawless Execution', description: 'Complete a practical with zero errors', icon: Sparkles, requirement: 1, current: 0, unlocked: false, unlockedAt: undefined, rarity: 'legendary' },
+      { id: 'speed_demon', name: 'Speed Demon', description: 'Complete a practical in under 50% of allocated time', icon: Zap, requirement: 1, current: 0, unlocked: false, unlockedAt: undefined, rarity: 'rare' },
     ],
   },
   {
@@ -40,12 +40,12 @@ const achievementCategories = [
     icon: Flame,
     color: 'orange',
     achievements: [
-      { id: 'streak_3', name: 'Getting Started', description: '3-day study streak', icon: Flame, requirement: 3, current: 7, unlocked: true, unlockedAt: '2024-01-18', rarity: 'common' },
-      { id: 'streak_7', name: 'Week Warrior', description: '7-day study streak', icon: Flame, requirement: 7, current: 7, unlocked: true, unlockedAt: '2024-02-05', rarity: 'common' },
-      { id: 'streak_14', name: 'Fortnight Fighter', description: '14-day study streak', icon: Flame, requirement: 14, current: 7, unlocked: false, progress: 7, total: 14, rarity: 'rare' },
-      { id: 'streak_30', name: 'Monthly Dedication', description: '30-day study streak', icon: Flame, requirement: 30, current: 7, unlocked: false, progress: 7, total: 30, rarity: 'epic' },
-      { id: 'streak_100', name: 'Century Club', description: '100-day study streak', icon: Flame, requirement: 100, current: 7, unlocked: false, progress: 7, total: 100, rarity: 'legendary' },
-      { id: 'weekly_regular', name: 'Weekly Regular', description: 'Complete at least 3 practicals per week for 4 weeks', icon: Clock, requirement: 4, current: 1, unlocked: false, progress: 1, total: 4, rarity: 'rare' },
+      { id: 'streak_3', name: 'Getting Started', description: '3-day study streak', icon: Flame, requirement: 3, current: 0, unlocked: false, progress: 0, total: 3, unlockedAt: undefined, rarity: 'common' },
+      { id: 'streak_7', name: 'Week Warrior', description: '7-day study streak', icon: Flame, requirement: 7, current: 0, unlocked: false, progress: 0, total: 7, unlockedAt: undefined, rarity: 'common' },
+      { id: 'streak_14', name: 'Fortnight Fighter', description: '14-day study streak', icon: Flame, requirement: 14, current: 0, unlocked: false, progress: 0, total: 14, unlockedAt: undefined, rarity: 'rare' },
+      { id: 'streak_30', name: 'Monthly Dedication', description: '30-day study streak', icon: Flame, requirement: 30, current: 0, unlocked: false, progress: 0, total: 30, unlockedAt: undefined, rarity: 'epic' },
+      { id: 'streak_100', name: 'Century Club', description: '100-day study streak', icon: Flame, requirement: 100, current: 0, unlocked: false, progress: 0, total: 100, unlockedAt: undefined, rarity: 'legendary' },
+      { id: 'weekly_regular', name: 'Weekly Regular', description: 'Complete at least 3 practicals per week for 4 weeks', icon: Clock, requirement: 4, current: 0, unlocked: false, progress: 0, total: 4, unlockedAt: undefined, rarity: 'rare' },
     ],
   },
   {
@@ -54,11 +54,11 @@ const achievementCategories = [
     icon: BookOpen,
     color: 'blue',
     achievements: [
-      { id: 'try_all_subjects', name: 'Curious Mind', description: 'Try all three subjects (Physics, Chemistry, Biology)', icon: BookOpen, requirement: 3, current: 3, unlocked: true, unlockedAt: '2024-01-20', rarity: 'common' },
-      { id: 'worksheet_submitter', name: 'Diligent Student', description: 'Submit 10 worksheets for grading', icon: BookOpen, requirement: 10, current: 3, unlocked: false, progress: 3, total: 10, rarity: 'rare' },
-      { id: 'guide_reader', name: 'Guide Follower', description: 'Read all WAEC guide tips in every practical', icon: BookOpen, requirement: 15, current: 8, unlocked: false, progress: 8, total: 15, rarity: 'rare' },
-      { id: 'night_owl', name: 'Night Owl', description: 'Complete a practical between 10 PM - 6 AM', icon: BookOpen, requirement: 1, current: 0, unlocked: false, rarity: 'common' },
-      { id: 'early_bird', name: 'Early Bird', description: 'Complete a practical before 8 AM', icon: BookOpen, requirement: 1, current: 0, unlocked: false, rarity: 'common' },
+      { id: 'try_all_subjects', name: 'Curious Mind', description: 'Try all three subjects (Physics, Chemistry, Biology)', icon: BookOpen, requirement: 3, current: 0, unlocked: false, progress: 0, total: 3, unlockedAt: undefined, rarity: 'common' },
+      { id: 'worksheet_submitter', name: 'Diligent Student', description: 'Submit 10 worksheets for grading', icon: BookOpen, requirement: 10, current: 0, unlocked: false, progress: 0, total: 10, unlockedAt: undefined, rarity: 'rare' },
+      { id: 'guide_reader', name: 'Guide Follower', description: 'Read all WAEC guide tips in every practical', icon: BookOpen, requirement: 15, current: 0, unlocked: false, progress: 0, total: 15, unlockedAt: undefined, rarity: 'rare' },
+      { id: 'night_owl', name: 'Night Owl', description: 'Complete a practical between 10 PM - 6 AM', icon: BookOpen, requirement: 1, current: 0, unlocked: false, unlockedAt: undefined, rarity: 'common' },
+      { id: 'early_bird', name: 'Early Bird', description: 'Complete a practical before 8 AM', icon: BookOpen, requirement: 1, current: 0, unlocked: false, unlockedAt: undefined, rarity: 'common' },
     ],
   },
 ];
@@ -145,7 +145,7 @@ export const AchievementsPage: React.FC = () => {
               </div>
               <div>
                 <p className="text-sm text-slate-500">Current Streak</p>
-                <p className="text-3xl font-bold text-slate-900">7 days</p>
+                <p className="text-3xl font-bold text-slate-900">0 days</p>
               </div>
             </div>
           </Card>
@@ -328,11 +328,7 @@ export const AchievementsPage: React.FC = () => {
                   </thead>
                   <tbody className="divide-y divide-slate-100">
                     {[
-                      { rank: 1, name: 'Adaeze O.', points: 2850, achievements: 24, streak: 45, you: false },
-                      { rank: 2, name: 'Kwame A.', points: 2620, achievements: 22, streak: 38, you: false },
-                      { rank: 3, name: 'Fatima B.', points: 2480, achievements: 21, streak: 32, you: false },
-                      { rank: 4, name: 'Chinedu K.', points: 2310, achievements: 19, streak: 28, you: false },
-                      { rank: 5, name: 'You', points: totalPoints, achievements: unlockedCount, streak: 7, you: true },
+                      { rank: 1, name: 'You', points: totalPoints, achievements: unlockedCount, streak: 0, you: true },
                     ].map((entry) => (
                       <tr key={entry.rank} className={cn('hover:bg-slate-50', entry.you && 'bg-lab-green-light/50')}>
                         <td className="py-3 font-mono font-bold text-slate-900">
