@@ -63,7 +63,6 @@ const microscopeTutorialSteps: StepRequirement[] = [
       return typeof s.activeSlide === 'string' && s.activeSlide.length > 0;
     },
     waecNote: 'WAEC Biology practicals often require identifying cell structures on prepared slides. Onion epidermal cells are the most commonly tested.',
-    repeatNote: 'You can switch to a different specimen at any time using the dropdown. Each specimen has its own set of structures to identify — try all 4 for full practice.',
   },
   {
     id: 'coarse-focus',
@@ -75,7 +74,6 @@ const microscopeTutorialSteps: StepRequirement[] = [
       return typeof s.coarseFocus === 'number' && s.coarseFocus > 0;
     },
     waecNote: 'Always start with coarse focus at low magnification (4x or 10x). This prevents damage to the slide and objective lens.',
-    repeatNote: 'Always adjust coarse focus first whenever you change magnification or switch to a new slide. Start from low and work up.',
   },
   {
     id: 'fine-focus',
@@ -87,7 +85,6 @@ const microscopeTutorialSteps: StepRequirement[] = [
       return typeof s.fineFocus === 'number' && s.fineFocus > 0;
     },
     waecNote: 'Fine focus reveals the details you need to identify structures like nuclei, cell walls, and chloroplasts for your labeled diagram.',
-    repeatNote: 'Adjust fine focus after coarse focus. Small movements make a big difference at high magnification — move the slider slowly.',
   },
   {
     id: 'select-label',
@@ -99,7 +96,6 @@ const microscopeTutorialSteps: StepRequirement[] = [
       return Array.isArray(s.identifiedParts) && s.identifiedParts.length > 0;
     },
     waecNote: 'WAEC requires you to draw and label what you observe. Each structure has a description telling you what to look for.',
-    repeatNote: 'Click each structure name one by one. Start with the easiest (e.g., Cell Wall) and work through all of them. The description tells you where to look on the image.',
   },
   {
     id: 'place-label',
@@ -111,7 +107,6 @@ const microscopeTutorialSteps: StepRequirement[] = [
       return Array.isArray(s.identifiedParts) && s.identifiedParts.length >= 1;
     },
     waecNote: 'Read the description of each structure before labeling — it tells you what to look for and where it is typically found.',
-    repeatNote: 'After placing one label, go back to the "Identify Structures" tab and select the next structure. Repeat: select name → click on image → select next name. Aim to label all structures for full marks.',
   },
   {
     id: 'stain',
@@ -123,7 +118,7 @@ const microscopeTutorialSteps: StepRequirement[] = [
       return s.stained === true;
     },
     waecNote: 'Iodine stain highlights nuclei and starch grains. WAEC awards bonus points for demonstrating stain knowledge. Plant cells use iodine; animal cells use methylene blue.',
-    repeatNote: 'Toggle the switch on/off to compare stained vs unstained views. Staining is optional but earns +20 bonus points. Plant cells (onion, leaf, spirogyra) benefit most from iodine stain.',
+    repeatNote: 'To practice with a different specimen, click the Tutorial button again to restart this walkthrough. Try all 4 specimens (Onion, Leaf Stomata, Cheek Cell, Spirogyra) for full practice.',
   },
 ];
 

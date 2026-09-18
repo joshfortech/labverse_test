@@ -65,7 +65,6 @@ const titrationTutorialSteps: StepRequirement[] = [
       return s.indicatorAdded === true;
     },
     waecNote: 'Methyl Orange is the standard indicator for this titration. It turns yellow in alkaline Na₂CO₃ and orange at the endpoint (pH 4.4).',
-    repeatNote: 'Each time you start a new trial, you must re-add indicator because the flask resets to plain Na₂CO₃ solution. Click "Add Methyl Orange Indicator" again.',
   },
   {
     id: 'start-trial',
@@ -78,7 +77,6 @@ const titrationTutorialSteps: StepRequirement[] = [
       return ct?.initial !== undefined;
     },
     waecNote: 'Always start from 0.00 cm³ for the initial reading. This simplifies calculation — the final reading equals the volume delivered.',
-    repeatNote: 'For each new trial, click "Start Trial" after adding indicator. The initial reading is always 0.00 cm³.',
   },
   {
     id: 'dispense-1ml',
@@ -90,7 +88,6 @@ const titrationTutorialSteps: StepRequirement[] = [
       return typeof s.titrantAdded === 'number' && s.titrantAdded > 0;
     },
     waecNote: 'Use bulk addition (1.0 mL) when far from the endpoint to save time. Switch to 0.1 mL drops when the color starts to change.',
-    repeatNote: 'In your first trial, add 1.0 mL at a time until the color starts changing. In later trials, you will know approximately when to slow down.',
   },
   {
     id: 'dispense-01ml',
@@ -102,7 +99,6 @@ const titrationTutorialSteps: StepRequirement[] = [
       return typeof s.titrantAdded === 'number' && s.titrantAdded > 0;
     },
     waecNote: 'WAEC requires precise endpoint detection. Near the endpoint, add ONE DROP (0.1 mL) at a time and swirl. The first permanent orange is the endpoint.',
-    repeatNote: 'In later trials, you will know the approximate endpoint volume (e.g., ~21.5 mL). Add 0.1 mL drops when you are within 1 mL of that volume.',
   },
   {
     id: 'end-trial',
@@ -115,7 +111,6 @@ const titrationTutorialSteps: StepRequirement[] = [
       return ct?.initial !== undefined && ct?.final !== undefined;
     },
     waecNote: 'Read the burette at eye level (bottom of meniscus). Record to 2 decimal places (e.g., 21.50 cm³).',
-    repeatNote: 'After clicking "End Trial", the final reading is recorded. Click "Record Trial" to save, then repeat steps 1–6 for the next trial.',
   },
   {
     id: 'record-trial',
@@ -127,7 +122,7 @@ const titrationTutorialSteps: StepRequirement[] = [
       return Array.isArray(s.trials) && s.trials.length >= 1;
     },
     waecNote: 'WAEC requires at least 2 concordant titers (readings within ±0.20 cm³). Concordant titers prove your technique is consistent.',
-    repeatNote: 'After recording, the apparatus resets. Repeat steps 1–6: add indicator → start trial → dispense → detect endpoint → end trial → record. Keep going until you have 2 concordant titers (within ±0.20 cm³). If you overshoot (pink), still record it and try again.',
+    repeatNote: 'To collect more trials, click "Reset Apparatus", then click the Tutorial button again to restart this walkthrough. You need at least 2 concordant titers (within ±0.20 cm³). If you overshoot (pink), still record it and try again.',
   },
 ];
 

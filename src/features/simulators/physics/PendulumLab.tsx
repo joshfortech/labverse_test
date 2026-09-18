@@ -60,7 +60,6 @@ const tutorialSteps: StepRequirement[] = [
       return typeof s.length === 'number' && s.length >= 0.2 && s.length <= 1.2;
     },
     waecNote: 'WAEC requires plotting a T² vs L graph. You need at least 5 different lengths to draw a reliable straight line through the data points.',
-    repeatNote: 'This is trial 1 of 5. After recording, drag the Length slider to a new value (e.g., 0.50 m), then repeat steps 1–4. You need 5 different lengths: 0.30, 0.50, 0.70, 0.90, 1.10 m. Keep the angle the same for all trials.',
   },
   {
     id: 'set-angle',
@@ -72,7 +71,6 @@ const tutorialSteps: StepRequirement[] = [
       return typeof s.angle === 'number' && s.angle >= 5 && s.angle <= 30;
     },
     waecNote: 'The angle must stay constant across all trials — only the length changes between trials. Small angles (≤15°) ensure the motion approximates simple harmonic motion.',
-    repeatNote: 'Set this once and keep it the same for all 5 lengths. Only the length changes between trials — do NOT change the angle when you repeat.',
   },
   {
     id: 'release',
@@ -84,7 +82,6 @@ const tutorialSteps: StepRequirement[] = [
       return s.isRunning === true;
     },
     waecNote: 'WAEC specifies timing 20 complete oscillations to reduce the effect of reaction time on the measured period. The timer stops automatically at 20.',
-    repeatNote: 'Wait for the pendulum to complete all 20 oscillations — the timer stops automatically. One oscillation = left → right → back to start.',
   },
   {
     id: 'record',
@@ -97,7 +94,6 @@ const tutorialSteps: StepRequirement[] = [
       return !!history && history.length >= 1;
     },
     waecNote: 'Record L to 2 d.p., t₂₀ to 2 d.p., T to 3 d.p., T² to 3 d.p. These values go into your observation table.',
-    repeatNote: 'After recording, go back to step 1 and drag the Length slider to a new value. Repeat steps 1–4 until you have 5 data points in the observation table.',
   },
   {
     id: 'submit',
@@ -106,7 +102,7 @@ const tutorialSteps: StepRequirement[] = [
     correctiveHint: 'Click "Submit Worksheet" to calculate your experimental g from the slope.',
     validate: () => true,
     waecNote: 'Plot T² (y-axis) against L (x-axis). The slope S = 4π²/g, so g = 4π²/S. Acceptable range: 9.6–10.0 m/s².',
-    repeatNote: 'To repeat the entire experiment, click "Reset" to clear all data from the observation table, then start from step 1. You can also use the digital graph below to plot your points and draw a line of best fit.',
+    repeatNote: 'To collect more data points, click "Reset", then click the Tutorial button again to restart this walkthrough. You need 5 different lengths for a complete WAEC practical. Use the digital graph below the observation table to plot your T² vs L points and draw a line of best fit.',
   },
 ];
 
@@ -117,6 +113,7 @@ export const PendulumLab: React.FC = () => {
   const { isOpen: tutorialIsOpen, validateAndAdvance, debouncedAdvance } = useTutorialStore();
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const pendulumSectionRef = useRef<HTMLDivElement>(null);
   const physicsAnimRef = useRef<number | null>(null);
   const drawAnimRef = useRef<number | null>(null);
   const lastTimeRef = useRef<number>(0);
@@ -324,6 +321,7 @@ export const PendulumLab: React.FC = () => {
     if (oscillations >= 20 && isRunning) return;
     if (!isRunning) {
       lastTimeRef.current = 0;
+      pendulumSectionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
     updatePendulumState({ isRunning: !isRunning });
     setTimeout(tryTutorialAdvance, 50);
@@ -443,7 +441,7 @@ export const PendulumLab: React.FC = () => {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 p-6">
         <div className="lg:col-span-2 space-y-6">
-          <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-4">
+          <div ref={pendulumSectionRef} className="bg-white rounded-2xl shadow-sm border border-slate-200 p-4 scroll-mt-4">
             <div className="flex items-center justify-between mb-4">
               <div>
                 <h2 className="text-xl font-bold text-slate-800">Labverse Physics: Simple Pendulum Practical</h2>
@@ -713,6 +711,25 @@ export const PendulumLab: React.FC = () => {
             </div>
           </Card>
         </div>
+      </div>
+
+      <div ref={graphSectionRef} className="p-6 scroll-mt-4">
+        <WAECGraph
+          title="T² vs L Graph"
+          xLabel="Length"
+          yLabel="Period Squared"
+          xUnit="m"
+          yUnit="s²"
+          xMin={0}
+          xMax={1.4}
+          yMin={0}
+          yMax={6}
+          xStep={0.2}
+          yStep={1}
+          dataPoints={graphPoints}
+          onPointsChange={setGraphPoints}
+          showBestFit={true}
+        />
       </div>
     </>
   );

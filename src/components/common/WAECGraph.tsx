@@ -1,12 +1,19 @@
 import React, { useState, useRef, useCallback, useEffect } from 'react';
 import { Button } from '../ui/button';
 import { Card } from '../ui/card';
-import { Trash2, TrendingDown } from 'lucide-react';
+import { Trash2, TrendingDown, Pencil, X } from 'lucide-react';
 
 export interface GraphPoint {
   x: number;
   y: number;
   id: string;
+}
+
+export interface DrawnLine {
+  x1: number;
+  y1: number;
+  x2: number;
+  y2: number;
 }
 
 interface WAECGraphProps {
@@ -34,6 +41,7 @@ const GRID_COLOR = '#E2E8F0';
 const AXIS_COLOR = '#1E293B';
 const POINT_COLOR = '#2563EB';
 const BESTFIT_COLOR = '#DC2626';
+const DRAWN_LINE_COLOR = '#7C3AED';
 
 const GRAPH_WIDTH = 800;
 const GRAPH_HEIGHT = 520;
@@ -59,6 +67,10 @@ export const WAECGraph: React.FC<WAECGraphProps> = ({
 }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [hoveredPoint, setHoveredPoint] = useState<string | null>(null);
+  const [drawMode, setDrawMode] = useState(false);
+  const [drawLineStart, setDrawLineStart] = useState<{ x: number; y: number } | null>(null);
+  const [drawnLines, setDrawnLines] = useState<DrawnLine[]>([]);
+  const [drawPreview, setDrawPreview] = useState<{ x1: number; y1: number; x2: number; y2: number } | null>(null);
 
   const plotWidth = GRAPH_WIDTH - PADDING.left - PADDING.right;
   const plotHeight = GRAPH_HEIGHT - PADDING.top - PADDING.bottom;
@@ -182,32 +194,55 @@ export const WAECGraph: React.FC<WAECGraphProps> = ({
       ctx.textBaseline = 'top';
       const eqText = equation || `y = ${slope.toFixed(3)}x + ${intercept.toFixed(3)}`;
       ctx.fillText(eqText, PADDING.left + 12, PADDING.top + 8);
+    }
 
-      if (slope !== 0) {
-        const midX = (xMin + xMax) / 2;
-        const midY = slope * midX + intercept;
-        const rise = slope * (xMax - xMin) * 0.25;
-        const run = (xMax - xMin) * 0.25;
+    drawnLines.forEach((line) => {
+      ctx.strokeStyle = DRAWN_LINE_COLOR;
+      ctx.lineWidth = 2.5;
+      ctx.setLineDash([]);
+      ctx.beginPath();
+      ctx.moveTo(toCanvasX(line.x1), toCanvasY(line.y1));
+      ctx.lineTo(toCanvasX(line.x2), toCanvasY(line.y2));
+      ctx.stroke();
 
-        ctx.strokeStyle = '#94A3B8';
-        ctx.lineWidth = 1;
-        ctx.setLineDash([4, 4]);
-        ctx.beginPath();
-        ctx.moveTo(toCanvasX(midX), toCanvasY(midY));
-        ctx.lineTo(toCanvasX(midX + run), toCanvasY(midY));
-        ctx.lineTo(toCanvasX(midX + run), toCanvasY(midY + rise));
-        ctx.stroke();
-        ctx.setLineDash([]);
-
-        ctx.fillStyle = '#64748B';
-        ctx.font = '11px sans-serif';
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'top';
-        ctx.fillText(`run = ${run.toFixed(2)}`, toCanvasX(midX + run / 2), toCanvasY(midY) + 4);
+      const dx = line.x2 - line.x1;
+      const dy = line.y2 - line.y1;
+      if (dx !== 0) {
+        const m = dy / dx;
+        const c = line.y1 - m * line.x1;
+        ctx.fillStyle = DRAWN_LINE_COLOR;
+        ctx.font = '11px monospace';
         ctx.textAlign = 'left';
-        ctx.textBaseline = 'middle';
-        ctx.fillText(`rise = ${rise.toFixed(2)}`, toCanvasX(midX + run) + 4, toCanvasY(midY + rise / 2));
+        ctx.textBaseline = 'bottom';
+        ctx.fillText(`y = ${m.toFixed(3)}x ${c >= 0 ? '+' : ''}${c.toFixed(3)}`, toCanvasX(line.x2) + 8, toCanvasY(line.y2) - 4);
       }
+    });
+
+    if (drawPreview) {
+      ctx.strokeStyle = DRAWN_LINE_COLOR;
+      ctx.lineWidth = 2;
+      ctx.setLineDash([6, 4]);
+      ctx.globalAlpha = 0.6;
+      ctx.beginPath();
+      ctx.moveTo(toCanvasX(drawPreview.x1), toCanvasY(drawPreview.y1));
+      ctx.lineTo(toCanvasX(drawPreview.x2), toCanvasY(drawPreview.y2));
+      ctx.stroke();
+      ctx.setLineDash([]);
+      ctx.globalAlpha = 1;
+    }
+
+    if (drawLineStart) {
+      const cx = toCanvasX(drawLineStart.x);
+      const cy = toCanvasY(drawLineStart.y);
+      ctx.fillStyle = DRAWN_LINE_COLOR;
+      ctx.beginPath();
+      ctx.arc(cx, cy, 6, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.strokeStyle = '#FFFFFF';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.arc(cx, cy, 6, 0, Math.PI * 2);
+      ctx.stroke();
     }
 
     dataPoints.forEach((point) => {
@@ -239,7 +274,7 @@ export const WAECGraph: React.FC<WAECGraphProps> = ({
     ctx.textAlign = 'center';
     ctx.textBaseline = 'top';
     ctx.fillText(title, GRAPH_WIDTH / 2, 10);
-  }, [dataPoints, hoveredPoint, toCanvasX, toCanvasY, xMin, xMax, yMin, yMax, xStep, yStep, plotWidth, plotHeight, xLabel, yLabel, xUnit, yUnit, showBestFit, slope, intercept, equation, title]);
+  }, [dataPoints, hoveredPoint, toCanvasX, toCanvasY, xMin, xMax, yMin, yMax, xStep, yStep, plotWidth, plotHeight, xLabel, yLabel, xUnit, yUnit, showBestFit, slope, intercept, equation, title, drawnLines, drawLineStart, drawPreview]);
 
   useEffect(() => {
     draw();
@@ -266,6 +301,29 @@ export const WAECGraph: React.FC<WAECGraphProps> = ({
 
     const { x, y } = canvasToData(canvasX, canvasY);
 
+    if (drawMode) {
+      const snappedX = Math.round(x / xStep) * xStep;
+      const snappedY = Math.round(y / yStep) * yStep;
+      const clampedX = Math.max(xMin, Math.min(xMax, snappedX));
+      const clampedY = Math.max(yMin, Math.min(yMax, snappedY));
+
+      if (!drawLineStart) {
+        setDrawLineStart({ x: clampedX, y: clampedY });
+        setDrawPreview(null);
+      } else {
+        const newLine: DrawnLine = {
+          x1: drawLineStart.x,
+          y1: drawLineStart.y,
+          x2: clampedX,
+          y2: clampedY,
+        };
+        setDrawnLines((prev) => [...prev, newLine]);
+        setDrawLineStart(null);
+        setDrawPreview(null);
+      }
+      return;
+    }
+
     const snappedX = Math.round(x / xStep) * xStep;
     const snappedY = Math.round(y / yStep) * yStep;
 
@@ -279,12 +337,17 @@ export const WAECGraph: React.FC<WAECGraphProps> = ({
     };
 
     onPointsChange([...dataPoints, newPoint]);
-  }, [dataPoints, onPointsChange, canvasToData, plotWidth, plotHeight, xMin, xMax, yMin, yMax, xStep, yStep, getCanvasCoords]);
+  }, [dataPoints, onPointsChange, canvasToData, plotWidth, plotHeight, xMin, xMax, yMin, yMax, xStep, yStep, getCanvasCoords, drawMode, drawLineStart]);
 
   const handleCanvasMouseMove = useCallback((e: React.MouseEvent<HTMLCanvasElement>) => {
     const coords = getCanvasCoords(e);
     if (!coords) return;
     const { canvasX, canvasY } = coords;
+
+    if (drawMode && drawLineStart) {
+      const { x, y } = canvasToData(canvasX, canvasY);
+      setDrawPreview({ x1: drawLineStart.x, y1: drawLineStart.y, x2: x, y2: y });
+    }
 
     let closest: string | null = null;
     let minDist = 20;
@@ -300,7 +363,7 @@ export const WAECGraph: React.FC<WAECGraphProps> = ({
     });
 
     setHoveredPoint(closest);
-  }, [dataPoints, toCanvasX, toCanvasY, getCanvasCoords]);
+  }, [dataPoints, toCanvasX, toCanvasY, getCanvasCoords, drawMode, drawLineStart, canvasToData]);
 
   const handleRemovePoint = useCallback((id: string) => {
     onPointsChange(dataPoints.filter((p) => p.id !== id));
@@ -308,7 +371,21 @@ export const WAECGraph: React.FC<WAECGraphProps> = ({
 
   const handleClearAll = useCallback(() => {
     onPointsChange([]);
+    setDrawnLines([]);
+    setDrawLineStart(null);
+    setDrawPreview(null);
   }, [onPointsChange]);
+
+  const handleClearLines = useCallback(() => {
+    setDrawnLines([]);
+    setDrawLineStart(null);
+    setDrawPreview(null);
+  }, []);
+
+  const handleCancelDraw = useCallback(() => {
+    setDrawLineStart(null);
+    setDrawPreview(null);
+  }, []);
 
   const calculateStats = useCallback(() => {
     if (dataPoints.length < 2) return null;
@@ -332,35 +409,65 @@ export const WAECGraph: React.FC<WAECGraphProps> = ({
     <Card className="p-6">
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-lg font-bold text-slate-800">{title}</h3>
-        <div className="flex items-center gap-3">
-          <span className="text-sm text-slate-500">{dataPoints.length} points plotted</span>
-          <Button variant="outline" size="sm" onClick={handleClearAll} disabled={dataPoints.length === 0}>
+        <div className="flex items-center gap-2">
+          <span className="text-sm text-slate-500">{dataPoints.length} pts</span>
+          <Button
+            variant={drawMode ? 'default' : 'outline'}
+            size="sm"
+            onClick={() => { setDrawMode(!drawMode); setDrawLineStart(null); setDrawPreview(null); }}
+            className={drawMode ? 'bg-purple-600 hover:bg-purple-700 text-white' : 'text-purple-700 border-purple-300 hover:bg-purple-50'}
+          >
+            <Pencil size={14} className="mr-1" /> {drawMode ? 'Done Drawing' : 'Draw Line'}
+          </Button>
+          {drawnLines.length > 0 && (
+            <Button variant="outline" size="sm" onClick={handleClearLines} className="text-slate-600">
+              <X size={14} className="mr-1" /> Clear Lines
+            </Button>
+          )}
+          <Button variant="outline" size="sm" onClick={handleClearAll} disabled={dataPoints.length === 0 && drawnLines.length === 0}>
             <Trash2 size={14} className="mr-1" /> Clear All
           </Button>
         </div>
       </div>
+
+      {drawMode && (
+        <div className="mb-3 p-3 bg-purple-50 border border-purple-200 rounded-xl text-sm text-purple-800">
+          {drawLineStart
+            ? `First point set at (${drawLineStart.x.toFixed(2)}, ${drawLineStart.y.toFixed(3)}). Click a second point to complete the line.`
+            : 'Click on the graph to set the first point of your line of best fit.'
+          }
+          {drawLineStart && (
+            <Button variant="ghost" size="sm" onClick={handleCancelDraw} className="ml-2 text-purple-600 h-6 px-2">
+              Cancel
+            </Button>
+          )}
+        </div>
+      )}
 
       <div className="w-full flex justify-center">
         <canvas
           ref={canvasRef}
           width={GRAPH_WIDTH}
           height={GRAPH_HEIGHT}
-          className="w-full max-w-[800px] cursor-crosshair border border-slate-200 rounded-lg bg-white shadow-sm"
+          className={`w-full max-w-[800px] border border-slate-200 rounded-lg bg-white shadow-sm ${drawMode ? 'cursor-crosshair' : 'cursor-crosshair'}`}
           onClick={handleCanvasClick}
           onMouseMove={handleCanvasMouseMove}
-          onMouseLeave={() => setHoveredPoint(null)}
+          onMouseLeave={() => { setHoveredPoint(null); setDrawPreview(null); }}
         />
       </div>
 
       <p className="text-xs text-slate-500 mt-3 text-center">
-        Click anywhere on the graph to plot a data point. Points snap to the nearest grid line.
+        {drawMode
+          ? 'Click two points on the graph to draw a line. Points snap to the nearest grid line.'
+          : 'Click anywhere on the graph to plot a data point. Use "Draw Line" to manually draw a line of best fit.'
+        }
       </p>
 
       {stats && showBestFit && (
         <div className="mt-4 p-4 bg-red-50 border border-red-200 rounded-xl">
           <div className="flex items-center gap-2 mb-2">
             <TrendingDown size={16} className="text-red-600" />
-            <span className="text-sm font-bold text-red-800">Line of Best Fit (Least Squares)</span>
+            <span className="text-sm font-bold text-red-800">Automatic Best Fit (Least Squares)</span>
           </div>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-3 text-sm">
             <div>
@@ -377,6 +484,36 @@ export const WAECGraph: React.FC<WAECGraphProps> = ({
                 y = {stats.slope.toFixed(3)}x {stats.intercept >= 0 ? '+' : ''}{stats.intercept.toFixed(3)}
               </span>
             </div>
+          </div>
+        </div>
+      )}
+
+      {drawnLines.length > 0 && (
+        <div className="mt-3 p-4 bg-purple-50 border border-purple-200 rounded-xl">
+          <div className="flex items-center gap-2 mb-2">
+            <Pencil size={16} className="text-purple-600" />
+            <span className="text-sm font-bold text-purple-800">Your Drawn Lines</span>
+          </div>
+          <div className="space-y-2">
+            {drawnLines.map((line, idx) => {
+              const dx = line.x2 - line.x1;
+              const dy = line.y2 - line.y1;
+              const m = dx !== 0 ? dy / dx : 0;
+              const c = line.y1 - m * line.x1;
+              return (
+                <div key={idx} className="flex items-center justify-between text-sm">
+                  <span className="font-mono text-purple-900">
+                    Line {idx + 1}: y = {m.toFixed(3)}x {c >= 0 ? '+' : ''}{c.toFixed(3)}
+                  </span>
+                  <button
+                    onClick={() => setDrawnLines((prev) => prev.filter((_, i) => i !== idx))}
+                    className="text-purple-400 hover:text-purple-600 p-0.5"
+                  >
+                    <Trash2 size={12} />
+                  </button>
+                </div>
+              );
+            })}
           </div>
         </div>
       )}
