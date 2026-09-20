@@ -313,7 +313,7 @@ export const ProgressPage: React.FC = () => {
                   ) : achievement.progress !== undefined ? (
                     <div className="space-y-1">
                       <div className="h-2 w-full overflow-hidden rounded-full bg-slate-200">
-                        <div className="h-full bg-lab-green transition-all" style={{ width: `${(achievement.progress / achievement.total) * 100}%` }} />
+                        <div className="h-full bg-lab-green transition-all" style={{ width: `${((achievement.progress ?? 0) / (achievement.total ?? 1)) * 100}%` }} />
                       </div>
                       <p className="text-xs text-slate-500">{achievement.progress} of {achievement.total ?? 0} completed</p>
                     </div>
